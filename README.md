@@ -1,6 +1,6 @@
 # Olikflow Monorepo
 
-Монорепозиторий, содержащий три Next.js приложения, развернутых на разных поддоменах Vercel.
+Монорепозиторий, содержащий четыре Next.js приложения, развернутых на разных поддоменах Vercel.
 
 ## Структура проекта
 
@@ -14,6 +14,9 @@ olikflow-frontend/
 │
 ├── workspace/      # Рабочее пространство для работы с данными проекта
 │                   # Домен: workspace.oblikflow.com
+│
+├── platform/       # Дашборд настройки платформы
+│                   # Домен: platform.oblikflow.com
 │
 ├── shared/         # Общие компоненты, типы и утилиты
 │
@@ -39,8 +42,13 @@ olikflow-frontend/
    - При выборе проекта → редирект на `workspace.oblikflow.com?project=xxx`
 
 3. **Workspace** (`workspace.oblikflow.com`) - Рабочее пространство
+
    - Работа с данными выбранного проекта
    - Полный функционал приложения
+
+4. **Platform** (`platform.oblikflow.com`) - Настройка платформы
+   - Дашборд для настройки и управления платформой
+   - Системные настройки и конфигурация
 
 ### Авторизация
 
@@ -60,8 +68,8 @@ olikflow-frontend/
 ```
 1. Пользователь авторизуется на oblikflow.com
 2. Cookie устанавливается с domain=.oblikflow.com
-3. Этот cookie автоматически доступен на admin.oblikflow.com и workspace.oblikflow.com
-4. Все три приложения могут читать один и тот же токен
+3. Этот cookie автоматически доступен на admin.oblikflow.com, workspace.oblikflow.com и platform.oblikflow.com
+4. Все четыре приложения могут читать один и тот же токен
 ```
 
 #### Development (localhost)
@@ -119,6 +127,9 @@ pnpm dev:admin
 
 # Запуск workspace (порт 3002)
 pnpm dev:workspace
+
+# Запуск platform (порт 3003)
+pnpm dev:platform
 ```
 
 #### Запуск всех проектов одновременно
@@ -131,15 +142,16 @@ pnpm dev:all
 
 #### Для локальной разработки
 
-Создайте файлы `.env.local` в каждой директории проекта (`site/.env.local`, `admin/.env.local`, `workspace/.env.local`).
+Создайте файлы `.env.local` в каждой директории проекта (`site/.env.local`, `admin/.env.local`, `workspace/.env.local`, `platform/.env.local`).
 
-**Содержимое файла `.env.local` (одинаковое для всех трех проектов):**
+**Содержимое файла `.env.local` (одинаковое для всех четырех проектов):**
 
 ```env
 NEXT_PUBLIC_BASE_DOMAIN=localhost:3000
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_ADMIN_URL=http://localhost:3001
 NEXT_PUBLIC_WORKSPACE_URL=http://localhost:3002
+NEXT_PUBLIC_PLATFORM_URL=http://localhost:3003
 NEXT_PUBLIC_COOKIE_DOMAIN=localhost
 ```
 
@@ -152,6 +164,7 @@ NEXT_PUBLIC_BASE_DOMAIN=localhost:3000
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_ADMIN_URL=http://localhost:3001
 NEXT_PUBLIC_WORKSPACE_URL=http://localhost:3002
+NEXT_PUBLIC_PLATFORM_URL=http://localhost:3003
 NEXT_PUBLIC_COOKIE_DOMAIN=localhost
 EOF
 
@@ -161,6 +174,7 @@ NEXT_PUBLIC_BASE_DOMAIN=localhost:3000
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_ADMIN_URL=http://localhost:3001
 NEXT_PUBLIC_WORKSPACE_URL=http://localhost:3002
+NEXT_PUBLIC_PLATFORM_URL=http://localhost:3003
 NEXT_PUBLIC_COOKIE_DOMAIN=localhost
 EOF
 
@@ -170,6 +184,17 @@ NEXT_PUBLIC_BASE_DOMAIN=localhost:3000
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_ADMIN_URL=http://localhost:3001
 NEXT_PUBLIC_WORKSPACE_URL=http://localhost:3002
+NEXT_PUBLIC_PLATFORM_URL=http://localhost:3003
+NEXT_PUBLIC_COOKIE_DOMAIN=localhost
+EOF
+
+# Создать .env.local для platform
+cat > platform/.env.local << 'EOF'
+NEXT_PUBLIC_BASE_DOMAIN=localhost:3000
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_ADMIN_URL=http://localhost:3001
+NEXT_PUBLIC_WORKSPACE_URL=http://localhost:3002
+NEXT_PUBLIC_PLATFORM_URL=http://localhost:3003
 NEXT_PUBLIC_COOKIE_DOMAIN=localhost
 EOF
 ```
@@ -192,8 +217,10 @@ import {
   navigateToSite,
   navigateToAdmin,
   navigateToWorkspace,
+  navigateToPlatform,
   getSiteUrl,
   getAdminUrl,
+  getPlatformUrl,
 } from "shared";
 ```
 
@@ -244,9 +271,10 @@ export default function ProtectedPage() {
 ### Сборка одного проекта
 
 ```bash
-pnpm build:public
-pnpm build:app
+pnpm build:site
+pnpm build:admin
 pnpm build:workspace
+pnpm build:platform
 ```
 
 ### Сборка всех проектов
@@ -259,7 +287,7 @@ pnpm build:all
 
 ### Настройка проектов в Vercel
 
-Вам нужно создать **три отдельных проекта** в Vercel Dashboard:
+Вам нужно создать **четыре отдельных проекта** в Vercel Dashboard:
 
 #### 1. Проект "public"
 
@@ -283,6 +311,7 @@ pnpm build:all
    NEXT_PUBLIC_SITE_URL=https://oblikflow.com
    NEXT_PUBLIC_ADMIN_URL=https://admin.oblikflow.com
    NEXT_PUBLIC_WORKSPACE_URL=https://workspace.oblikflow.com
+   NEXT_PUBLIC_PLATFORM_URL=https://platform.oblikflow.com
    NEXT_PUBLIC_COOKIE_DOMAIN=.oblikflow.com
    ```
 
@@ -309,6 +338,7 @@ pnpm build:all
    NEXT_PUBLIC_SITE_URL=https://oblikflow.com
    NEXT_PUBLIC_ADMIN_URL=https://admin.oblikflow.com
    NEXT_PUBLIC_WORKSPACE_URL=https://workspace.oblikflow.com
+   NEXT_PUBLIC_PLATFORM_URL=https://platform.oblikflow.com
    NEXT_PUBLIC_COOKIE_DOMAIN=.oblikflow.com
    ```
 
@@ -335,28 +365,59 @@ pnpm build:all
    NEXT_PUBLIC_SITE_URL=https://oblikflow.com
    NEXT_PUBLIC_ADMIN_URL=https://admin.oblikflow.com
    NEXT_PUBLIC_WORKSPACE_URL=https://workspace.oblikflow.com
+   NEXT_PUBLIC_PLATFORM_URL=https://platform.oblikflow.com
    NEXT_PUBLIC_COOKIE_DOMAIN=.oblikflow.com
    ```
 
-   **Важно:** Все три проекта должны иметь **одинаковые** значения этих переменных!
+   **Важно:** Все четыре проекта должны иметь **одинаковые** значения этих переменных!
 
 5. **Domain**: Добавьте `workspace.oblikflow.com` как поддомен
+
+#### 4. Проект "platform"
+
+1. Создайте новый проект в Vercel
+2. Подключите тот же репозиторий
+3. Настройки проекта:
+
+   - **Framework Preset**: Next.js
+   - **Root Directory**: `platform`
+   - **Build Command**: `pnpm install && pnpm --filter platform build`
+   - **Output Directory**: `.next` (не `platform/.next`!)
+   - **Install Command**: `pnpm install`
+
+4. **Environment Variables** (Settings → Environment Variables):
+
+   Добавьте **те же переменные**, что и для site, admin и workspace:
+
+   ```
+   NEXT_PUBLIC_BASE_DOMAIN=oblikflow.com
+   NEXT_PUBLIC_SITE_URL=https://oblikflow.com
+   NEXT_PUBLIC_ADMIN_URL=https://admin.oblikflow.com
+   NEXT_PUBLIC_WORKSPACE_URL=https://workspace.oblikflow.com
+   NEXT_PUBLIC_PLATFORM_URL=https://platform.oblikflow.com
+   NEXT_PUBLIC_COOKIE_DOMAIN=.oblikflow.com
+   ```
+
+   **Важно:** Все четыре проекта должны иметь **одинаковые** значения этих переменных!
+
+5. **Domain**: Добавьте `platform.oblikflow.com` как поддомен
 
 ### Настройка DNS
 
 В настройках DNS вашего домена добавьте записи:
 
 ```
-A     @             76.76.21.21    (или IP вашего Vercel проекта)
+A     @             216.198.79.1   (IP для корневого домена)
 CNAME admin         cname.vercel-dns.com
 CNAME workspace     cname.vercel-dns.com
+CNAME platform      cname.vercel-dns.com
 ```
 
 Или используйте автоматическую настройку DNS через Vercel Dashboard.
 
 ### Переменные окружения в Vercel
 
-**Ключевой момент:** В каждом из трех проектов Vercel нужно настроить **одинаковые** переменные окружения с **production URL** (фактическими доменами):
+**Ключевой момент:** В каждом из четырех проектов Vercel нужно настроить **одинаковые** переменные окружения с **production URL** (фактическими доменами):
 
 #### Для каждого проекта (public, app, workspace):
 
@@ -375,7 +436,7 @@ NEXT_PUBLIC_COOKIE_DOMAIN=.oblikflow.com
 **Важно:**
 
 - ✅ Используйте **фактические production URL** (не localhost!)
-- ✅ Все три проекта должны иметь **одинаковые** значения
+- ✅ Все четыре проекта должны иметь **одинаковые** значения
 - ✅ `NEXT_PUBLIC_COOKIE_DOMAIN` должен начинаться с точки (`.oblikflow.com`) для работы cookies между поддоменами
 - ✅ Добавьте переменные для всех окружений (Production, Preview, Development)
 
@@ -383,7 +444,7 @@ NEXT_PUBLIC_COOKIE_DOMAIN=.oblikflow.com
 
 - Каждое приложение должно знать URL других для навигации между поддоменами
 - Cookie domain должен быть одинаковым для работы авторизации между поддоменами
-- Это позволяет редиректам и авторизации работать корректно во всех трех приложениях
+- Это позволяет редиректам и авторизации работать корректно во всех четырех приложениях
 
 ### Важные моменты для production
 
@@ -402,10 +463,12 @@ NEXT_PUBLIC_COOKIE_DOMAIN=.oblikflow.com
 - `pnpm dev:site` - Запуск site в dev режиме
 - `pnpm dev:admin` - Запуск admin в dev режиме
 - `pnpm dev:workspace` - Запуск workspace в dev режиме
+- `pnpm dev:platform` - Запуск platform в dev режиме
 - `pnpm dev:all` - Запуск всех проектов одновременно
 - `pnpm build:site` - Сборка site
 - `pnpm build:admin` - Сборка admin
 - `pnpm build:workspace` - Сборка workspace
+- `pnpm build:platform` - Сборка platform
 - `pnpm build:all` - Сборка всех проектов
 - `pnpm lint` - Линтинг всех проектов
 

@@ -38,6 +38,13 @@ const getBaseUrl = (app: string): string => {
         `${protocol}://workspace.${host}`
       );
     }
+    if (app === "platform") {
+      return (
+        (typeof process !== "undefined" &&
+          process.env?.NEXT_PUBLIC_PLATFORM_URL) ||
+        `${protocol}://platform.${host}`
+      );
+    }
   } else {
     // Client-side: use current origin
     const host = window.location.host;
@@ -45,16 +52,20 @@ const getBaseUrl = (app: string): string => {
 
     if (app === "site") {
       // Remove subdomain if present
-      const baseHost = host.replace(/^(admin|workspace)\./, "");
+      const baseHost = host.replace(/^(admin|workspace|platform)\./, "");
       return `${protocol}//${baseHost}`;
     }
     if (app === "admin") {
-      const baseHost = host.replace(/^(admin|workspace)\./, "");
+      const baseHost = host.replace(/^(admin|workspace|platform)\./, "");
       return `${protocol}//admin.${baseHost}`;
     }
     if (app === "workspace") {
-      const baseHost = host.replace(/^(admin|workspace)\./, "");
+      const baseHost = host.replace(/^(admin|workspace|platform)\./, "");
       return `${protocol}//workspace.${baseHost}`;
+    }
+    if (app === "platform") {
+      const baseHost = host.replace(/^(admin|workspace|platform)\./, "");
+      return `${protocol}//platform.${baseHost}`;
     }
   }
 
@@ -108,11 +119,28 @@ export const navigateToAdmin = (path: string = "") => {
 };
 
 /**
+ * Get URL for platform application (platform settings)
+ */
+export const getPlatformUrl = (path: string = ""): string => {
+  const baseUrl = getBaseUrl("platform");
+  return `${baseUrl}${path}`;
+};
+
+/**
  * Navigate to workspace application with project ID
  */
 export const navigateToWorkspace = (projectId: string, path: string = "") => {
   if (typeof window !== "undefined") {
     window.location.href = getWorkspaceUrl(projectId, path);
+  }
+};
+
+/**
+ * Navigate to platform application (platform settings)
+ */
+export const navigateToPlatform = (path: string = "") => {
+  if (typeof window !== "undefined") {
+    window.location.href = getPlatformUrl(path);
   }
 };
 
