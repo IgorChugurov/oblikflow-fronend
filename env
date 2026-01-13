@@ -2,4 +2,5 @@ NEXT_PUBLIC_BASE_DOMAIN=oblikflow.com
 NEXT_PUBLIC_SITE_URL=https://oblikflow.com
 NEXT_PUBLIC_ADMIN_URL=https://admin.oblikflow.com
 NEXT_PUBLIC_WORKSPACE_URL=https://workspace.oblikflow.com
+NEXT_PUBLIC_PLATFORM_URL=https://platform.oblikflow.com
 NEXT_PUBLIC_COOKIE_DOMAIN=.oblikflow.com
