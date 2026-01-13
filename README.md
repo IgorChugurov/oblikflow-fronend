@@ -289,7 +289,7 @@ pnpm build:all
 
 Вам нужно создать **четыре отдельных проекта** в Vercel Dashboard:
 
-#### 1. Проект "public"
+#### 1. Проект "site"
 
 1. Перейдите в [Vercel Dashboard](https://vercel.com/dashboard)
 2. Нажмите "Add New Project"
@@ -297,8 +297,8 @@ pnpm build:all
 4. Настройки проекта:
 
    - **Framework Preset**: Next.js
-   - **Root Directory**: `public`
-   - **Build Command**: `pnpm install && pnpm --filter public build`
+   - **Root Directory**: `site`
+   - **Build Command**: `pnpm install && pnpm --filter site build`
    - **Output Directory**: `.next` (не `public/.next`!)
    - **Install Command**: `pnpm install`
 
@@ -317,7 +317,20 @@ pnpm build:all
 
    **Важно:** Используйте **фактические production URL** с поддоменами (не localhost!)
 
-6. **Domain**: Добавьте `oblikflow.com` как основной домен
+6. **Ignored Build Step** (Settings → Git → Ignored Build Step):
+
+   Включите опцию **"Override"** и добавьте команду:
+
+   ```bash
+   git diff HEAD^ HEAD --quiet -- site/ shared/
+   ```
+
+   **Логика:**
+
+   - Если файлы в `site/` или `shared/` **НЕ изменились** → команда вернет 0 → сборка **пропускается** ✅
+   - Если файлы **изменились** → команда вернет 1 → сборка **выполняется** ✅
+
+7. **Domain**: Добавьте `oblikflow.com` как основной домен
 
 #### 2. Проект "admin"
 
@@ -342,7 +355,15 @@ pnpm build:all
    NEXT_PUBLIC_COOKIE_DOMAIN=.oblikflow.com
    ```
 
-5. **Domain**: Добавьте `admin.oblikflow.com` как поддомен
+5. **Ignored Build Step** (Settings → Git → Ignored Build Step):
+
+   Включите опцию **"Override"** и добавьте:
+
+   ```bash
+   git diff HEAD^ HEAD --quiet -- admin/ shared/
+   ```
+
+6. **Domain**: Добавьте `admin.oblikflow.com` как поддомен
 
 #### 3. Проект "workspace"
 
@@ -371,7 +392,15 @@ pnpm build:all
 
    **Важно:** Все четыре проекта должны иметь **одинаковые** значения этих переменных!
 
-5. **Domain**: Добавьте `workspace.oblikflow.com` как поддомен
+5. **Ignored Build Step** (Settings → Git → Ignored Build Step):
+
+   Включите опцию **"Override"** и добавьте:
+
+   ```bash
+   git diff HEAD^ HEAD --quiet -- workspace/ shared/
+   ```
+
+6. **Domain**: Добавьте `workspace.oblikflow.com` как поддомен
 
 #### 4. Проект "platform"
 
@@ -400,7 +429,15 @@ pnpm build:all
 
    **Важно:** Все четыре проекта должны иметь **одинаковые** значения этих переменных!
 
-5. **Domain**: Добавьте `platform.oblikflow.com` как поддомен
+5. **Ignored Build Step** (Settings → Git → Ignored Build Step):
+
+   Включите опцию **"Override"** и добавьте:
+
+   ```bash
+   git diff HEAD^ HEAD --quiet -- platform/ shared/
+   ```
+
+6. **Domain**: Добавьте `platform.oblikflow.com` как поддомен
 
 ### Настройка DNS
 
@@ -415,11 +452,59 @@ CNAME platform      cname.vercel-dns.com
 
 Или используйте автоматическую настройку DNS через Vercel Dashboard.
 
+### Оптимизация сборок: Ignored Build Step
+
+Чтобы проекты не пересобирались при каждом пуше, настройте **Ignored Build Step** для каждого проекта:
+
+**Как это работает:**
+
+- Vercel проверяет, изменились ли файлы в указанных директориях
+- Если файлы не изменились → сборка пропускается
+- Если изменились → сборка выполняется
+
+**Настройка для каждого проекта:**
+
+1. Откройте проект в Vercel Dashboard
+2. Перейдите в **Settings** → **Git**
+3. Найдите раздел **"Ignored Build Step"**
+4. Включите опцию **"Override"**
+5. Добавьте соответствующую команду (см. ниже)
+
+**Команды для каждого проекта:**
+
+- **site**: `git diff HEAD^ HEAD --quiet -- site/ shared/`
+- **admin**: `git diff HEAD^ HEAD --quiet -- admin/ shared/`
+- **workspace**: `git diff HEAD^ HEAD --quiet -- workspace/ shared/`
+- **platform**: `git diff HEAD^ HEAD --quiet -- platform/ shared/`
+
+**Как это работает:**
+
+В Vercel Ignored Build Step:
+
+- **Exit code 0** (успех) → сборка **пропускается** (skip build)
+- **Exit code != 0** (ошибка) → сборка **выполняется** (run build)
+
+`git diff HEAD^ HEAD --quiet -- site/ shared/`:
+
+- Если файлы **НЕ изменились** → возвращает **0** → сборка **пропускается** ✅
+- Если файлы **изменились** → возвращает **1** → сборка **выполняется** ✅
+
+**Важно:**
+
+- `shared/` включен во все команды, так как изменения в общем коде влияют на все проекты
+- При первом коммите (когда нет `HEAD^`) команда может вернуть ошибку → сборка выполнится (это нормально)
+
+**Примеры:**
+
+- Изменили файл в `site/app/page.tsx` → соберется только проект **site**
+- Изменили файл в `shared/lib/navigation.ts` → соберутся **все** проекты
+- Изменили только `README.md` → **ничего** не соберется
+
 ### Переменные окружения в Vercel
 
 **Ключевой момент:** В каждом из четырех проектов Vercel нужно настроить **одинаковые** переменные окружения с **production URL** (фактическими доменами):
 
-#### Для каждого проекта (public, app, workspace):
+#### Для каждого проекта (site, admin, workspace, platform):
 
 1. Откройте проект в [Vercel Dashboard](https://vercel.com/dashboard)
 2. Перейдите в **Settings** → **Environment Variables**
@@ -430,6 +515,7 @@ NEXT_PUBLIC_BASE_DOMAIN=oblikflow.com
 NEXT_PUBLIC_SITE_URL=https://oblikflow.com
 NEXT_PUBLIC_ADMIN_URL=https://admin.oblikflow.com
 NEXT_PUBLIC_WORKSPACE_URL=https://workspace.oblikflow.com
+NEXT_PUBLIC_PLATFORM_URL=https://platform.oblikflow.com
 NEXT_PUBLIC_COOKIE_DOMAIN=.oblikflow.com
 ```
 
