@@ -6,16 +6,18 @@
 
 ```
 olikflow-frontend/
-├── public/          # Основной сайт-витрина + авторизация
+├── site/           # Основной сайт-витрина + авторизация
 │                   # Домен: yourdomain.com
 │
-├── app/            # Админка управления проектами
-│                   # Домен: app.yourdomain.com
+├── admin/          # Админка управления проектами
+│                   # Домен: admin.yourdomain.com
 │
 ├── workspace/      # Рабочее пространство для работы с данными проекта
 │                   # Домен: workspace.yourdomain.com
 │
 ├── shared/         # Общие компоненты, типы и утилиты
+│
+├── public/         # Статические файлы Next.js (общие для всех проектов)
 │
 ├── pnpm-workspace.yaml
 └── package.json
@@ -25,12 +27,12 @@ olikflow-frontend/
 
 ### Поток пользователя
 
-1. **Public** (`yourdomain.com`) - Витрина с авторизацией
+1. **Site** (`yourdomain.com`) - Витрина с авторизацией
 
    - Пользователь регистрируется/входит в систему
-   - После успешной авторизации → редирект на `app.yourdomain.com`
+   - После успешной авторизации → редирект на `admin.yourdomain.com`
 
-2. **App** (`app.yourdomain.com`) - Управление проектами
+2. **Admin** (`admin.yourdomain.com`) - Управление проектами
 
    - Пользователь видит список своих проектов
    - Может создавать новые проекты
@@ -49,7 +51,7 @@ olikflow-frontend/
 В production режиме авторизация работает через **cookies с domain**:
 
 - **JWT токены** хранятся в cookies с `domain=.yourdomain.com` (с точкой в начале)
-- Cookies доступны на всех поддоменах: `yourdomain.com`, `app.yourdomain.com`, `workspace.yourdomain.com`
+- Cookies доступны на всех поддоменах: `yourdomain.com`, `admin.yourdomain.com`, `workspace.yourdomain.com`
 - Используются флаги `SameSite=None; Secure` для работы между поддоменами
 - Требуется HTTPS (автоматически предоставляется Vercel)
 
@@ -58,7 +60,7 @@ olikflow-frontend/
 ```
 1. Пользователь авторизуется на yourdomain.com
 2. Cookie устанавливается с domain=.yourdomain.com
-3. Этот cookie автоматически доступен на app.yourdomain.com и workspace.yourdomain.com
+3. Этот cookie автоматически доступен на admin.yourdomain.com и workspace.yourdomain.com
 4. Все три приложения могут читать один и тот же токен
 ```
 
@@ -109,11 +111,11 @@ pnpm install
 #### Запуск одного проекта
 
 ```bash
-# Запуск public (порт 3000)
-pnpm dev:public
+# Запуск site (порт 3000)
+pnpm dev:site
 
-# Запуск app (порт 3001)
-pnpm dev:app
+# Запуск admin (порт 3001)
+pnpm dev:admin
 
 # Запуск workspace (порт 3002)
 pnpm dev:workspace
@@ -129,14 +131,14 @@ pnpm dev:all
 
 #### Для локальной разработки
 
-Создайте файлы `.env.local` в каждой директории проекта (`public/.env.local`, `app/.env.local`, `workspace/.env.local`).
+Создайте файлы `.env.local` в каждой директории проекта (`site/.env.local`, `admin/.env.local`, `workspace/.env.local`).
 
 **Содержимое файла `.env.local` (одинаковое для всех трех проектов):**
 
 ```env
 NEXT_PUBLIC_BASE_DOMAIN=localhost:3000
-NEXT_PUBLIC_PUBLIC_URL=http://localhost:3000
-NEXT_PUBLIC_APP_URL=http://localhost:3001
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_ADMIN_URL=http://localhost:3001
 NEXT_PUBLIC_WORKSPACE_URL=http://localhost:3002
 NEXT_PUBLIC_COOKIE_DOMAIN=localhost
 ```
@@ -144,20 +146,20 @@ NEXT_PUBLIC_COOKIE_DOMAIN=localhost
 **Быстрое создание файлов (выполните из корня репозитория):**
 
 ```bash
-# Создать .env.local для public
-cat > public/.env.local << 'EOF'
+# Создать .env.local для site
+cat > site/.env.local << 'EOF'
 NEXT_PUBLIC_BASE_DOMAIN=localhost:3000
-NEXT_PUBLIC_PUBLIC_URL=http://localhost:3000
-NEXT_PUBLIC_APP_URL=http://localhost:3001
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_ADMIN_URL=http://localhost:3001
 NEXT_PUBLIC_WORKSPACE_URL=http://localhost:3002
 NEXT_PUBLIC_COOKIE_DOMAIN=localhost
 EOF
 
-# Создать .env.local для app
-cat > app/.env.local << 'EOF'
+# Создать .env.local для admin
+cat > admin/.env.local << 'EOF'
 NEXT_PUBLIC_BASE_DOMAIN=localhost:3000
-NEXT_PUBLIC_PUBLIC_URL=http://localhost:3000
-NEXT_PUBLIC_APP_URL=http://localhost:3001
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_ADMIN_URL=http://localhost:3001
 NEXT_PUBLIC_WORKSPACE_URL=http://localhost:3002
 NEXT_PUBLIC_COOKIE_DOMAIN=localhost
 EOF
@@ -165,8 +167,8 @@ EOF
 # Создать .env.local для workspace
 cat > workspace/.env.local << 'EOF'
 NEXT_PUBLIC_BASE_DOMAIN=localhost:3000
-NEXT_PUBLIC_PUBLIC_URL=http://localhost:3000
-NEXT_PUBLIC_APP_URL=http://localhost:3001
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_ADMIN_URL=http://localhost:3001
 NEXT_PUBLIC_WORKSPACE_URL=http://localhost:3002
 NEXT_PUBLIC_COOKIE_DOMAIN=localhost
 EOF
@@ -186,25 +188,25 @@ import type { User, Project } from "shared";
 import { isAuthenticated, getCurrentUser, clearAuth } from "shared";
 
 // Импорт утилит навигации
-import { navigateToApp, navigateToWorkspace, getAppUrl } from "shared";
+import { navigateToSite, navigateToAdmin, navigateToWorkspace, getSiteUrl, getAdminUrl } from "shared";
 ```
 
 ### Примеры использования
 
-#### Редирект после авторизации (public)
+#### Редирект после авторизации (site)
 
 ```typescript
-import { navigateToApp, setAuthCookies } from "shared";
+import { navigateToAdmin, setAuthCookies } from "shared";
 
 // После успешной авторизации
 const handleLogin = async (credentials) => {
   const session = await login(credentials);
   setAuthCookies(session);
-  navigateToApp("/");
+  navigateToAdmin("/");
 };
 ```
 
-#### Переход к проекту (app)
+#### Переход к проекту (admin)
 
 ```typescript
 import { navigateToWorkspace } from "shared";
@@ -218,11 +220,11 @@ const handleProjectSelect = (projectId: string) => {
 
 ```typescript
 import { isAuthenticated, getCurrentUser } from "shared";
-import { navigateToPublic } from "shared";
+import { navigateToSite } from "shared";
 
 export default function ProtectedPage() {
   if (!isAuthenticated()) {
-    navigateToPublic("/login");
+    navigateToSite("/login");
     return null;
   }
 
@@ -263,7 +265,7 @@ pnpm build:all
    - **Framework Preset**: Next.js
    - **Root Directory**: `public`
    - **Build Command**: `pnpm install && pnpm --filter public build`
-   - **Output Directory**: `public/.next`
+   - **Output Directory**: `.next` (не `public/.next`!)
    - **Install Command**: `pnpm install`
 
 5. **Environment Variables** (Settings → Environment Variables):
@@ -291,7 +293,7 @@ pnpm build:all
    - **Framework Preset**: Next.js
    - **Root Directory**: `app`
    - **Build Command**: `pnpm install && pnpm --filter app build`
-   - **Output Directory**: `app/.next`
+   - **Output Directory**: `.next` (не `app/.next`!)
    - **Install Command**: `pnpm install`
 
 4. **Environment Variables** (те же, что и для public):
@@ -315,7 +317,7 @@ pnpm build:all
    - **Framework Preset**: Next.js
    - **Root Directory**: `workspace`
    - **Build Command**: `pnpm install && pnpm --filter workspace build`
-   - **Output Directory**: `workspace/.next`
+   - **Output Directory**: `.next` (не `workspace/.next`!)
    - **Install Command**: `pnpm install`
 
 4. **Environment Variables** (Settings → Environment Variables):
@@ -340,7 +342,7 @@ pnpm build:all
 
 ```
 A     @             76.76.21.21    (или IP вашего Vercel проекта)
-CNAME app           cname.vercel-dns.com
+CNAME admin         cname.vercel-dns.com
 CNAME workspace     cname.vercel-dns.com
 ```
 
@@ -358,8 +360,8 @@ CNAME workspace     cname.vercel-dns.com
 
 ```
 NEXT_PUBLIC_BASE_DOMAIN=yourdomain.com
-NEXT_PUBLIC_PUBLIC_URL=https://yourdomain.com
-NEXT_PUBLIC_APP_URL=https://app.yourdomain.com
+NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+NEXT_PUBLIC_ADMIN_URL=https://admin.yourdomain.com
 NEXT_PUBLIC_WORKSPACE_URL=https://workspace.yourdomain.com
 NEXT_PUBLIC_COOKIE_DOMAIN=.yourdomain.com
 ```
@@ -391,12 +393,12 @@ NEXT_PUBLIC_COOKIE_DOMAIN=.yourdomain.com
 
 ### Root level scripts
 
-- `pnpm dev:public` - Запуск public в dev режиме
-- `pnpm dev:app` - Запуск app в dev режиме
+- `pnpm dev:site` - Запуск site в dev режиме
+- `pnpm dev:admin` - Запуск admin в dev режиме
 - `pnpm dev:workspace` - Запуск workspace в dev режиме
 - `pnpm dev:all` - Запуск всех проектов одновременно
-- `pnpm build:public` - Сборка public
-- `pnpm build:app` - Сборка app
+- `pnpm build:site` - Сборка site
+- `pnpm build:admin` - Сборка admin
 - `pnpm build:workspace` - Сборка workspace
 - `pnpm build:all` - Сборка всех проектов
 - `pnpm lint` - Линтинг всех проектов

@@ -3,15 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev:public": "pnpm --filter public dev",
-    "dev:app": "pnpm --filter app dev",
+    "dev:site": "pnpm --filter site dev",
+    "dev:admin": "pnpm --filter admin dev",
     "dev:workspace": "pnpm --filter workspace dev",
-    "dev:all": "pnpm --parallel --filter \"./public\" --filter \"./app\" --filter \"./workspace\" dev",
-    "build:public": "pnpm --filter public build",
-    "build:app": "pnpm --filter app build",
+    "dev:all": "pnpm --parallel --filter \"./site\" --filter \"./admin\" --filter \"./workspace\" dev",
+    "build:site": "pnpm --filter site build",
+    "build:admin": "pnpm --filter admin build",
     "build:workspace": "pnpm --filter workspace build",
-    "build:all": "pnpm --filter public build && pnpm --filter app build && pnpm --filter workspace build",
-    "lint": "pnpm --filter public lint && pnpm --filter app lint && pnpm --filter workspace lint"
+    "build:all": "pnpm --filter site build && pnpm --filter admin build && pnpm --filter workspace build",
+    "lint": "pnpm --filter site lint && pnpm --filter admin lint && pnpm --filter workspace lint"
   },
   "devDependencies": {
     "typescript": "^5"

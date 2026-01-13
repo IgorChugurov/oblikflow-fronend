@@ -1,96 +1,127 @@
 /**
  * Navigation utilities for cross-application routing
- * 
+ *
  * These functions handle navigation between different subdomains/applications
  */
 
 // Environment-based URLs - can be overridden via environment variables
-const getBaseUrl = (subdomain: string): string => {
-  if (typeof window === 'undefined') {
+const getBaseUrl = (app: string): string => {
+  if (typeof window === "undefined") {
     // Server-side: use environment variables or default
-    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
-    const host = process.env.NEXT_PUBLIC_BASE_DOMAIN || 'localhost:3000';
-    
-    if (subdomain === 'public') {
-      return process.env.NEXT_PUBLIC_PUBLIC_URL || `${protocol}://${host}`;
+    const protocol =
+      typeof process !== "undefined" && process.env?.NODE_ENV === "production"
+        ? "https"
+        : "http";
+    const host =
+      (typeof process !== "undefined" &&
+        process.env?.NEXT_PUBLIC_BASE_DOMAIN) ||
+      "localhost:3000";
+
+    if (app === "site") {
+      return (
+        (typeof process !== "undefined" &&
+          process.env?.NEXT_PUBLIC_SITE_URL) ||
+        `${protocol}://${host}`
+      );
     }
-    if (subdomain === 'app') {
-      return process.env.NEXT_PUBLIC_APP_URL || `${protocol}://app.${host}`;
+    if (app === "admin") {
+      return (
+        (typeof process !== "undefined" &&
+          process.env?.NEXT_PUBLIC_ADMIN_URL) ||
+        `${protocol}://admin.${host}`
+      );
     }
-    if (subdomain === 'workspace') {
-      return process.env.NEXT_PUBLIC_WORKSPACE_URL || `${protocol}://workspace.${host}`;
+    if (app === "workspace") {
+      return (
+        (typeof process !== "undefined" &&
+          process.env?.NEXT_PUBLIC_WORKSPACE_URL) ||
+        `${protocol}://workspace.${host}`
+      );
     }
   } else {
     // Client-side: use current origin
     const host = window.location.host;
     const protocol = window.location.protocol;
-    
-    if (subdomain === 'public') {
+
+    if (app === "site") {
       // Remove subdomain if present
-      const baseHost = host.replace(/^(app|workspace)\./, '');
+      const baseHost = host.replace(/^(admin|workspace)\./, "");
       return `${protocol}//${baseHost}`;
     }
-    if (subdomain === 'app') {
-      const baseHost = host.replace(/^(app|workspace)\./, '');
-      return `${protocol}//app.${baseHost}`;
+    if (app === "admin") {
+      const baseHost = host.replace(/^(admin|workspace)\./, "");
+      return `${protocol}//admin.${baseHost}`;
     }
-    if (subdomain === 'workspace') {
-      const baseHost = host.replace(/^(app|workspace)\./, '');
+    if (app === "workspace") {
+      const baseHost = host.replace(/^(admin|workspace)\./, "");
       return `${protocol}//workspace.${baseHost}`;
     }
   }
-  
-  return '';
+
+  return "";
 };
 
 /**
- * Get URL for public application (main site)
+ * Get URL for site application (main site)
  */
-export const getPublicUrl = (path: string = ''): string => {
-  const baseUrl = getBaseUrl('public');
+export const getSiteUrl = (path: string = ""): string => {
+  const baseUrl = getBaseUrl("site");
   return `${baseUrl}${path}`;
 };
 
 /**
- * Get URL for app application (project management)
+ * Get URL for admin application (project management)
  */
-export const getAppUrl = (path: string = ''): string => {
-  const baseUrl = getBaseUrl('app');
+export const getAdminUrl = (path: string = ""): string => {
+  const baseUrl = getBaseUrl("admin");
   return `${baseUrl}${path}`;
 };
 
 /**
  * Get URL for workspace application
  */
-export const getWorkspaceUrl = (projectId?: string, path: string = ''): string => {
-  const baseUrl = getBaseUrl('workspace');
-  const query = projectId ? `?project=${projectId}` : '';
+export const getWorkspaceUrl = (
+  projectId?: string,
+  path: string = ""
+): string => {
+  const baseUrl = getBaseUrl("workspace");
+  const query = projectId ? `?project=${projectId}` : "";
   return `${baseUrl}${path}${query}`;
 };
 
 /**
- * Navigate to public application
+ * Navigate to site application
  */
-export const navigateToPublic = (path: string = '') => {
-  if (typeof window !== 'undefined') {
-    window.location.href = getPublicUrl(path);
+export const navigateToSite = (path: string = "") => {
+  if (typeof window !== "undefined") {
+    window.location.href = getSiteUrl(path);
   }
 };
 
 /**
- * Navigate to app application (project management)
+ * Navigate to admin application (project management)
  */
-export const navigateToApp = (path: string = '') => {
-  if (typeof window !== 'undefined') {
-    window.location.href = getAppUrl(path);
+export const navigateToAdmin = (path: string = "") => {
+  if (typeof window !== "undefined") {
+    window.location.href = getAdminUrl(path);
   }
 };
 
 /**
  * Navigate to workspace application with project ID
  */
-export const navigateToWorkspace = (projectId: string, path: string = '') => {
-  if (typeof window !== 'undefined') {
+export const navigateToWorkspace = (projectId: string, path: string = "") => {
+  if (typeof window !== "undefined") {
     window.location.href = getWorkspaceUrl(projectId, path);
   }
 };
+
+// Legacy exports for backward compatibility (deprecated)
+/** @deprecated Use getSiteUrl instead */
+export const getPublicUrl = getSiteUrl;
+/** @deprecated Use navigateToSite instead */
+export const navigateToPublic = navigateToSite;
+/** @deprecated Use getAdminUrl instead */
+export const getAppUrl = getAdminUrl;
+/** @deprecated Use navigateToAdmin instead */
+export const navigateToApp = navigateToAdmin;
