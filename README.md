@@ -7,13 +7,13 @@
 ```
 olikflow-frontend/
 ├── site/           # Основной сайт-витрина + авторизация
-│                   # Домен: yourdomain.com
+│                   # Домен: oblikflow.com
 │
 ├── admin/          # Админка управления проектами
-│                   # Домен: admin.yourdomain.com
+│                   # Домен: admin.oblikflow.com
 │
 ├── workspace/      # Рабочее пространство для работы с данными проекта
-│                   # Домен: workspace.yourdomain.com
+│                   # Домен: workspace.oblikflow.com
 │
 ├── shared/         # Общие компоненты, типы и утилиты
 │
@@ -27,18 +27,18 @@ olikflow-frontend/
 
 ### Поток пользователя
 
-1. **Site** (`yourdomain.com`) - Витрина с авторизацией
+1. **Site** (`oblikflow.com`) - Витрина с авторизацией
 
    - Пользователь регистрируется/входит в систему
-   - После успешной авторизации → редирект на `admin.yourdomain.com`
+   - После успешной авторизации → редирект на `admin.oblikflow.com`
 
-2. **Admin** (`admin.yourdomain.com`) - Управление проектами
+2. **Admin** (`admin.oblikflow.com`) - Управление проектами
 
    - Пользователь видит список своих проектов
    - Может создавать новые проекты
-   - При выборе проекта → редирект на `workspace.yourdomain.com?project=xxx`
+   - При выборе проекта → редирект на `workspace.oblikflow.com?project=xxx`
 
-3. **Workspace** (`workspace.yourdomain.com`) - Рабочее пространство
+3. **Workspace** (`workspace.oblikflow.com`) - Рабочее пространство
    - Работа с данными выбранного проекта
    - Полный функционал приложения
 
@@ -50,7 +50,7 @@ olikflow-frontend/
 
 В production режиме авторизация работает через **cookies с domain**:
 
-- **JWT токены** хранятся в cookies с `domain=.yourdomain.com` (с точкой в начале)
+- **JWT токены** хранятся в cookies с `domain=.oblikflow.com` (с точкой в начале)
 - Cookies доступны на всех поддоменах: `yourdomain.com`, `admin.yourdomain.com`, `workspace.yourdomain.com`
 - Используются флаги `SameSite=None; Secure` для работы между поддоменами
 - Требуется HTTPS (автоматически предоставляется Vercel)
@@ -58,9 +58,9 @@ olikflow-frontend/
 **Как это работает:**
 
 ```
-1. Пользователь авторизуется на yourdomain.com
-2. Cookie устанавливается с domain=.yourdomain.com
-3. Этот cookie автоматически доступен на admin.yourdomain.com и workspace.yourdomain.com
+1. Пользователь авторизуется на oblikflow.com
+2. Cookie устанавливается с domain=.oblikflow.com
+3. Этот cookie автоматически доступен на admin.oblikflow.com и workspace.oblikflow.com
 4. Все три приложения могут читать один и тот же токен
 ```
 
@@ -188,7 +188,13 @@ import type { User, Project } from "shared";
 import { isAuthenticated, getCurrentUser, clearAuth } from "shared";
 
 // Импорт утилит навигации
-import { navigateToSite, navigateToAdmin, navigateToWorkspace, getSiteUrl, getAdminUrl } from "shared";
+import {
+  navigateToSite,
+  navigateToAdmin,
+  navigateToWorkspace,
+  getSiteUrl,
+  getAdminUrl,
+} from "shared";
 ```
 
 ### Примеры использования
@@ -273,40 +279,40 @@ pnpm build:all
    Добавьте следующие переменные для всех окружений (Production, Preview, Development):
 
    ```
-   NEXT_PUBLIC_BASE_DOMAIN=yourdomain.com
-   NEXT_PUBLIC_PUBLIC_URL=https://yourdomain.com
-   NEXT_PUBLIC_APP_URL=https://app.yourdomain.com
-   NEXT_PUBLIC_WORKSPACE_URL=https://workspace.yourdomain.com
-   NEXT_PUBLIC_COOKIE_DOMAIN=.yourdomain.com
+   NEXT_PUBLIC_BASE_DOMAIN=oblikflow.com
+   NEXT_PUBLIC_SITE_URL=https://oblikflow.com
+   NEXT_PUBLIC_ADMIN_URL=https://admin.oblikflow.com
+   NEXT_PUBLIC_WORKSPACE_URL=https://workspace.oblikflow.com
+   NEXT_PUBLIC_COOKIE_DOMAIN=.oblikflow.com
    ```
 
    **Важно:** Используйте **фактические production URL** с поддоменами (не localhost!)
 
-6. **Domain**: Добавьте `yourdomain.com` как основной домен
+6. **Domain**: Добавьте `oblikflow.com` как основной домен
 
-#### 2. Проект "app"
+#### 2. Проект "admin"
 
 1. Создайте новый проект в Vercel
 2. Подключите тот же репозиторий
 3. Настройки проекта:
 
    - **Framework Preset**: Next.js
-   - **Root Directory**: `app`
-   - **Build Command**: `pnpm install && pnpm --filter app build`
-   - **Output Directory**: `.next` (не `app/.next`!)
+   - **Root Directory**: `admin`
+   - **Build Command**: `pnpm install && pnpm --filter admin build`
+   - **Output Directory**: `.next` (не `admin/.next`!)
    - **Install Command**: `pnpm install`
 
-4. **Environment Variables** (те же, что и для public):
+4. **Environment Variables** (те же, что и для site):
 
    ```
-   NEXT_PUBLIC_BASE_DOMAIN=yourdomain.com
-   NEXT_PUBLIC_PUBLIC_URL=https://yourdomain.com
-   NEXT_PUBLIC_APP_URL=https://app.yourdomain.com
-   NEXT_PUBLIC_WORKSPACE_URL=https://workspace.yourdomain.com
-   NEXT_PUBLIC_COOKIE_DOMAIN=.yourdomain.com
+   NEXT_PUBLIC_BASE_DOMAIN=oblikflow.com
+   NEXT_PUBLIC_SITE_URL=https://oblikflow.com
+   NEXT_PUBLIC_ADMIN_URL=https://admin.oblikflow.com
+   NEXT_PUBLIC_WORKSPACE_URL=https://workspace.oblikflow.com
+   NEXT_PUBLIC_COOKIE_DOMAIN=.oblikflow.com
    ```
 
-5. **Domain**: Добавьте `app.yourdomain.com` как поддомен
+5. **Domain**: Добавьте `admin.oblikflow.com` как поддомен
 
 #### 3. Проект "workspace"
 
@@ -322,19 +328,19 @@ pnpm build:all
 
 4. **Environment Variables** (Settings → Environment Variables):
 
-   Добавьте **те же переменные**, что и для public и app:
+   Добавьте **те же переменные**, что и для site и admin:
 
    ```
-   NEXT_PUBLIC_BASE_DOMAIN=yourdomain.com
-   NEXT_PUBLIC_PUBLIC_URL=https://yourdomain.com
-   NEXT_PUBLIC_APP_URL=https://app.yourdomain.com
-   NEXT_PUBLIC_WORKSPACE_URL=https://workspace.yourdomain.com
-   NEXT_PUBLIC_COOKIE_DOMAIN=.yourdomain.com
+   NEXT_PUBLIC_BASE_DOMAIN=oblikflow.com
+   NEXT_PUBLIC_SITE_URL=https://oblikflow.com
+   NEXT_PUBLIC_ADMIN_URL=https://admin.oblikflow.com
+   NEXT_PUBLIC_WORKSPACE_URL=https://workspace.oblikflow.com
+   NEXT_PUBLIC_COOKIE_DOMAIN=.oblikflow.com
    ```
 
    **Важно:** Все три проекта должны иметь **одинаковые** значения этих переменных!
 
-5. **Domain**: Добавьте `workspace.yourdomain.com` как поддомен
+5. **Domain**: Добавьте `workspace.oblikflow.com` как поддомен
 
 ### Настройка DNS
 
@@ -359,18 +365,18 @@ CNAME workspace     cname.vercel-dns.com
 3. Добавьте следующие переменные для **всех окружений** (Production, Preview, Development):
 
 ```
-NEXT_PUBLIC_BASE_DOMAIN=yourdomain.com
-NEXT_PUBLIC_SITE_URL=https://yourdomain.com
-NEXT_PUBLIC_ADMIN_URL=https://admin.yourdomain.com
-NEXT_PUBLIC_WORKSPACE_URL=https://workspace.yourdomain.com
-NEXT_PUBLIC_COOKIE_DOMAIN=.yourdomain.com
+NEXT_PUBLIC_BASE_DOMAIN=oblikflow.com
+NEXT_PUBLIC_SITE_URL=https://oblikflow.com
+NEXT_PUBLIC_ADMIN_URL=https://admin.oblikflow.com
+NEXT_PUBLIC_WORKSPACE_URL=https://workspace.oblikflow.com
+NEXT_PUBLIC_COOKIE_DOMAIN=.oblikflow.com
 ```
 
 **Важно:**
 
 - ✅ Используйте **фактические production URL** (не localhost!)
 - ✅ Все три проекта должны иметь **одинаковые** значения
-- ✅ `NEXT_PUBLIC_COOKIE_DOMAIN` должен начинаться с точки (`.yourdomain.com`) для работы cookies между поддоменами
+- ✅ `NEXT_PUBLIC_COOKIE_DOMAIN` должен начинаться с точки (`.oblikflow.com`) для работы cookies между поддоменами
 - ✅ Добавьте переменные для всех окружений (Production, Preview, Development)
 
 **Почему одинаковые?**
@@ -421,7 +427,7 @@ shared/
 
 **В Production:**
 
-- Убедитесь, что `NEXT_PUBLIC_COOKIE_DOMAIN` установлен как `.yourdomain.com` (с точкой в начале)
+- Убедитесь, что `NEXT_PUBLIC_COOKIE_DOMAIN` установлен как `.oblikflow.com` (с точкой в начале)
 - Используется HTTPS (Vercel предоставляет автоматически)
 - Cookies имеют флаги `SameSite=None; Secure` (устанавливаются автоматически)
 
@@ -432,7 +438,7 @@ shared/
 - Для полноценной работы в dev рекомендуется:
   1. Использовать один домен для всех приложений (например, `localhost:3000` с разными путями)
   2. Или настроить единый прокси-сервер
-  3. Или использовать реальный тестовый домен (например, `local.yourdomain.com`)
+  3. Или использовать реальный тестовый домен (например, `local.oblikflow.com`)
 
 **Проверка работы cookies:**
 
