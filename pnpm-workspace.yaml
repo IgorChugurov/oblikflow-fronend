@@ -1,0 +1,5 @@
+packages:
+  - "public"
+  - "app"
+  - "workspace"
+  - "shared"

@@ -1,0 +1,19 @@
+{
+  "name": "olikflow-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev:public": "pnpm --filter public dev",
+    "dev:app": "pnpm --filter app dev",
+    "dev:workspace": "pnpm --filter workspace dev",
+    "dev:all": "pnpm --parallel --filter \"./public\" --filter \"./app\" --filter \"./workspace\" dev",
+    "build:public": "pnpm --filter public build",
+    "build:app": "pnpm --filter app build",
+    "build:workspace": "pnpm --filter workspace build",
+    "build:all": "pnpm --filter public build && pnpm --filter app build && pnpm --filter workspace build",
+    "lint": "pnpm --filter public lint && pnpm --filter app lint && pnpm --filter workspace lint"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  }
+}
