@@ -1,30 +1,15 @@
 /**
- * Common types shared across all applications
+ * Centralized exports для всех типов
  */
 
-export interface User {
-  id: string;
-  email: string;
-  name?: string;
-  avatar?: string;
-}
+// Auth types
+export * from "./auth";
 
-export interface Project {
-  id: string;
-  name: string;
-  description?: string;
-  ownerId: string;
-  createdAt: string;
-  updatedAt: string;
-}
+// Enterprise types
+export * from "./enterprise";
 
-export interface AuthToken {
-  accessToken: string;
-  refreshToken?: string;
-  expiresIn?: number;
-}
+// API types
+export * from "../lib/api/types";
 
-export interface AuthSession {
-  user: User;
-  token: AuthToken;
-}
+// Supabase types
+export type { Database } from "../lib/supabase/types";

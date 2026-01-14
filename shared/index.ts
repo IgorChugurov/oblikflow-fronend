@@ -1,13 +1,14 @@
-/**
- * Shared package exports
- * 
- * This package contains common types, utilities, and components
- * shared across all applications in the monorepo
- */
+// i18n exports
+export * from "./lib/i18n/config";
+export { LanguageSwitcher } from "./components/LanguageSwitcher";
 
-// Types
-export * from './types';
+// Supabase exports
+export { createClient as createSupabaseClient } from "./lib/supabase/client";
+export { createClient as createSupabaseServerClient } from "./lib/supabase/server";
+export { updateSession } from "./lib/supabase/middleware";
 
-// Utilities
-export * from './lib/auth';
-export * from './lib/navigation';
+// API exports
+export { apiClient, ApiClient } from "./lib/api/client";
+
+// Types exports
+export * from "./types";

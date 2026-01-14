@@ -1,0 +1,145 @@
+{
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "description": "Enter your email and password to sign in",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Forgot password?",
+      "submit": "Sign In",
+      "submitting": "Signing in...",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign Up",
+      "orContinueWith": "Or continue with",
+      "success": "Successfully signed in",
+      "redirecting": "Redirecting...",
+      "errors": {
+        "invalidEmail": "Please enter a valid email",
+        "invalidPassword": "Password must be at least 6 characters",
+        "loginFailed": "Login failed. Please check your email and password"
+      }
+    },
+    "signup": {
+      "title": "Sign Up",
+      "description": "Create an account to get started",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "••••••••",
+      "submit": "Create Account",
+      "submitting": "Creating account...",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign In",
+      "orContinueWith": "Or continue with",
+      "success": "Registration successful!",
+      "checkEmail": "Check your email",
+      "checkEmailDescription": "We sent you a confirmation email",
+      "emailIcon": "📧",
+      "emailInstructions": "Click the link in the email to activate your account",
+      "backToLogin": "Back to Sign In",
+      "errors": {
+        "invalidEmail": "Please enter a valid email",
+        "invalidPassword": "Password must be at least 6 characters",
+        "passwordMismatch": "Passwords don't match",
+        "signupFailed": "Registration failed. Try another email"
+      }
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "description": "Enter your email to receive reset instructions",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "submit": "Send Instructions",
+      "submitting": "Sending...",
+      "backToLogin": "Back to Sign In",
+      "success": "Email sent",
+      "checkEmail": "Check your email",
+      "checkEmailDescription": "We sent you password reset instructions",
+      "emailIcon": "📧",
+      "emailInstructions": "Click the link in the email to reset your password",
+      "errors": {
+        "invalidEmail": "Please enter a valid email",
+        "resetFailed": "Failed to send email"
+      }
+    },
+    "resetPasswordConfirm": {
+      "title": "New Password",
+      "description": "Enter a new password for your account",
+      "password": "New Password",
+      "passwordPlaceholder": "••••••••",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "••••••••",
+      "submit": "Change Password",
+      "submitting": "Saving...",
+      "success": "Password changed",
+      "successDescription": "You can now sign in with your new password",
+      "errors": {
+        "invalidPassword": "Password must be at least 6 characters",
+        "passwordMismatch": "Passwords don't match",
+        "updateFailed": "Failed to change password"
+      }
+    },
+    "verifyEmail": {
+      "pending": {
+        "title": "Check your email",
+        "description": "We sent you a confirmation email",
+        "icon": "📧",
+        "instructions": "Click the link in the email to activate your account"
+      },
+      "success": {
+        "title": "Email verified!",
+        "description": "Your account has been activated",
+        "icon": "✅",
+        "instructions": "You can now sign in",
+        "loginButton": "Sign In"
+      },
+      "error": {
+        "title": "Verification failed",
+        "description": "Failed to verify email",
+        "icon": "❌",
+        "instructions": "Please try signing up again",
+        "signupButton": "Sign Up"
+      }
+    },
+    "oauth": {
+      "google": "Continue with Google",
+      "googleLoading": "Signing in..."
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "create": "Create",
+    "update": "Update",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "actions": "Actions",
+    "settings": "Settings",
+    "logout": "Sign Out",
+    "profile": "Profile",
+    "language": "Language"
+  },
+  "errors": {
+    "generic": "Something went wrong",
+    "notFound": "Not found",
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "serverError": "Server error",
+    "networkError": "Network error",
+    "tryAgain": "Try again"
+  }
+}
