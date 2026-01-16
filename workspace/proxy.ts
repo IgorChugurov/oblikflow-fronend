@@ -71,8 +71,11 @@ export async function proxy(request: NextRequest) {
   // ШАГ 1: Проверка JWT
   // ============================================================================
   if (!user) {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("redirect", request.nextUrl.pathname);
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://oblikflow.com';
+    const loginUrl = new URL("/login", siteUrl);
+    // Сохраняем полный URL для возврата после авторизации
+    loginUrl.searchParams.set("redirect", request.url);
+    console.log(`[workspace/proxy] Redirecting to site login: ${loginUrl.toString()}`);
     return NextResponse.redirect(loginUrl);
   }
 
@@ -83,7 +86,8 @@ export async function proxy(request: NextRequest) {
 
   if (!enterpriseId) {
     // Нет выбранного предприятия → redirect на admin для выбора
-    return NextResponse.redirect(new URL("/admin", request.url));
+    const adminUrl = process.env.NEXT_PUBLIC_ADMIN_URL || 'https://admin.oblikflow.com';
+    return NextResponse.redirect(new URL("/", adminUrl));
   }
 
   // ============================================================================
@@ -96,7 +100,9 @@ export async function proxy(request: NextRequest) {
 
   if (!token) {
     // Нет токена (не должно произойти, но на всякий случай)
-    const loginUrl = new URL("/login", request.url);
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://oblikflow.com';
+    const loginUrl = new URL("/login", siteUrl);
+    loginUrl.searchParams.set("redirect", request.url);
     return NextResponse.redirect(loginUrl);
   }
 
@@ -104,9 +110,8 @@ export async function proxy(request: NextRequest) {
 
   if (!hasAccess) {
     // Нет доступа к предприятию → redirect на admin + очистить cookie
-    const redirectResponse = NextResponse.redirect(
-      new URL("/admin", request.url)
-    );
+    const adminUrl = process.env.NEXT_PUBLIC_ADMIN_URL || 'https://admin.oblikflow.com';
+    const redirectResponse = NextResponse.redirect(new URL("/", adminUrl));
     redirectResponse.cookies.delete("current_enterprise_id");
     return redirectResponse;
   }

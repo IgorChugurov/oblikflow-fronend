@@ -15,6 +15,60 @@ export function createBrowserSupabaseClient(
   supabaseUrl: string,
   supabaseAnonKey: string
 ): SupabaseClient {
-  return createBrowserClient(supabaseUrl, supabaseAnonKey);
+  // Настраиваем cookies с правильным domain для работы между поддоменами
+  return createBrowserClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      get(name: string) {
+        // Читаем cookie из document.cookie
+        const value = document.cookie
+          .split('; ')
+          .find(row => row.startsWith(`${name}=`))
+          ?.split('=')[1];
+        return value;
+      },
+      set(name: string, value: string, options: any) {
+        // Устанавливаем cookie с domain для всех поддоменов
+        const cookieDomain = process.env.NODE_ENV === 'production'
+          ? process.env.NEXT_PUBLIC_COOKIE_DOMAIN || '.oblikflow.com'
+          : undefined;
+        
+        let cookie = `${name}=${value}; path=${options?.path || '/'}`;
+        
+        // Добавляем domain только в production
+        if (cookieDomain) {
+          cookie += `; domain=${cookieDomain}`;
+        }
+        
+        // Добавляем maxAge если указан
+        if (options?.maxAge) {
+          cookie += `; max-age=${options.maxAge}`;
+        }
+        
+        // Добавляем sameSite
+        cookie += `; samesite=${options?.sameSite || 'lax'}`;
+        
+        // Добавляем secure в production
+        if (process.env.NODE_ENV === 'production') {
+          cookie += '; secure';
+        }
+        
+        document.cookie = cookie;
+      },
+      remove(name: string, options: any) {
+        // Удаляем cookie с тем же domain
+        const cookieDomain = process.env.NODE_ENV === 'production'
+          ? process.env.NEXT_PUBLIC_COOKIE_DOMAIN || '.oblikflow.com'
+          : undefined;
+        
+        let cookie = `${name}=; path=${options?.path || '/'}; max-age=0`;
+        
+        if (cookieDomain) {
+          cookie += `; domain=${cookieDomain}`;
+        }
+        
+        document.cookie = cookie;
+      }
+    }
+  });
 }
 
