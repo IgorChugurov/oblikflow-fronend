@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Olikflow - Project Management",
+  title: "Oblikflow - Project Management",
   description: "Manage your projects",
 };
 

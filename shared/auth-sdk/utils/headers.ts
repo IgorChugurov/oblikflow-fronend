@@ -1,0 +1,58 @@
+/**
+ * Server-only функции для работы с авторизацией через headers
+ *
+ * ВАЖНО: Этот файл использует next/headers и может быть импортирован
+ * ТОЛЬКО в Server Components или Server Actions
+ *
+ * НАЗНАЧЕНИЕ:
+ * - Читает headers, установленные middleware
+ * - Оптимизация: избегает повторных запросов к Supabase в Server Components
+ * - Используется в layout.tsx и page.tsx для получения пользователя без запросов к БД
+ *
+ * Middleware устанавливает headers:
+ * - x-user-id: ID пользователя
+ * - x-user-email: email пользователя
+ * - x-user-first-name: имя пользователя (опционально)
+ * - x-user-last-name: фамилия пользователя (опционально)
+ * - x-user-avatar: аватар пользователя (опционально)
+ *
+ * ВАЖНО: Роли НЕ передаются через headers!
+ * Проверки доступа выполняются в middleware через Backend API
+ */
+
+import { headers } from "next/headers";
+import type { User } from "../types";
+
+/**
+ * Получение пользователя из headers (установленных middleware)
+ * Используется в Server Components для избежания повторных запросов
+ *
+ * Если headers нет (публичный маршрут), возвращает null
+ */
+export async function getServerUserFromHeaders(): Promise<User | null> {
+  try {
+    const headersList = await headers();
+    const userId = headersList.get("x-user-id");
+    const userEmail = headersList.get("x-user-email");
+    const firstName = headersList.get("x-user-first-name");
+    const lastName = headersList.get("x-user-last-name");
+    const avatar = headersList.get("x-user-avatar");
+
+    // Если headers нет - значит это публичный маршрут или неавторизованный пользователь
+    // Возвращаем null, не делаем fallback
+    if (!userId) {
+      return null;
+    }
+
+    return {
+      id: userId,
+      email: userEmail || "",
+      firstName: firstName || undefined,
+      lastName: lastName || undefined,
+      avatar: avatar || undefined,
+    };
+  } catch (error) {
+    console.error("[Auth Headers] Error reading from headers:", error);
+    return null;
+  }
+}

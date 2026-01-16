@@ -41,17 +41,20 @@ Next.js монорепо с 4 приложениями на разных под�
 ### Этап 1 - Что реализуем
 
 ✅ **Авторизация только на `site`:**
+
 - Login, Signup, Password Reset
 - Email verification
 - Google OAuth
 - Redirect неавторизованных с других поддоменов на `site/login`
 
 ✅ **Система ролей (упрощенная):**
+
 - **Global:** `users.is_system_admin` (superAdmin)
 - **Enterprise:** `owner` (в enterprises.owner_user_id + enterprise_memberships)
 - **Enterprise:** `admin` (в enterprise_memberships)
 
 ✅ **Функционал:**
+
 - Регистрация и логин
 - Список предприятий в `/admin`
 - Создание нового предприятия
@@ -60,6 +63,7 @@ Next.js монорепо с 4 приложениями на разных под�
 - SuperAdmin доступ к platform
 
 ❌ **НЕ реализуем на Этапе 1:**
+
 - Авторизация на всех поддоменах (только на site)
 - Приглашения по email
 - Кастомные роли и детальные permissions
@@ -73,19 +77,21 @@ Next.js монорепо с 4 приложениями на разных под�
 ### 1. Cookies для cross-subdomain
 
 **Production (домены):**
+
 ```typescript
 // sb-xxx-auth-token (Supabase, автоматически)
-domain: '.oblikflow.com'
-httpOnly: true
-secure: true
+domain: ".oblikflow.com";
+httpOnly: true;
+secure: true;
 
 // current_enterprise_id (наша кука)
-domain: '.oblikflow.com'
-httpOnly: false
-path: '/'
+domain: ".oblikflow.com";
+httpOnly: false;
+path: "/";
 ```
 
 **Development (localhost):**
+
 ```typescript
 // Используем localStorage/sessionStorage
 // Cookie не работает на localhost с разными портами
@@ -97,16 +103,18 @@ path: '/'
 
 ```typescript
 // Получить токен
-const { data: { session } } = await supabase.auth.getSession();
+const {
+  data: { session },
+} = await supabase.auth.getSession();
 const jwt = session?.access_token;
 
 // Каждый API запрос
 fetch(`${BACKEND_URL}/api/enterprises`, {
   headers: {
-    'Authorization': `Bearer ${jwt}`,
-    'X-Enterprise-ID': getCookie('current_enterprise_id'),
-    'Content-Type': 'application/json'
-  }
+    Authorization: `Bearer ${jwt}`,
+    "X-Enterprise-ID": getCookie("current_enterprise_id"),
+    "Content-Type": "application/json",
+  },
 });
 ```
 
@@ -115,15 +123,18 @@ fetch(`${BACKEND_URL}/api/enterprises`, {
 ### 3. Middleware для каждого приложения
 
 **site/middleware.ts:**
+
 - Обновление токена через `supabase.auth.getUser()`
 - Redirect авторизованных с `/login` на `/admin`
 
 **admin/middleware.ts:**
+
 - Проверка авторизации → redirect на `site/login`
 - Проверка email verification
 - Доступ для всех авторизованных пользователей
 
 **workspace/middleware.ts:**
+
 - Проверка авторизации → redirect на `site/login`
 - Проверка email verification
 - **Автовыбор предприятия** если нет cookie:
@@ -132,6 +143,7 @@ fetch(`${BACKEND_URL}/api/enterprises`, {
   3. Если нет предприятий → redirect на `/admin`
 
 **platform/middleware.ts:**
+
 - Проверка авторизации → redirect на `site/login`
 - Проверка `is_system_admin` → redirect на `/admin` если нет прав
 
@@ -157,19 +169,19 @@ Owner хранится:
 
 ```typescript
 // Проверка superAdmin
-const { data } = await supabase.rpc('is_system_admin', {
-  user_uuid: userId
+const { data } = await supabase.rpc("is_system_admin", {
+  user_uuid: userId,
 });
 
 // Получить роль в предприятии
-const { data: role } = await supabase.rpc('get_user_enterprise_role', {
+const { data: role } = await supabase.rpc("get_user_enterprise_role", {
   p_user_id: userId,
-  p_enterprise_id: enterpriseId
+  p_enterprise_id: enterpriseId,
 });
 
 // Получить список предприятий
-const { data: enterprises } = await supabase.rpc('get_user_enterprises', {
-  p_user_id: userId
+const { data: enterprises } = await supabase.rpc("get_user_enterprises", {
+  p_user_id: userId,
 });
 ```
 
@@ -197,6 +209,7 @@ const { data: enterprises } = await supabase.rpc('get_user_enterprises', {
 Вся документация в `/docs/auth/`:
 
 **Для фронтенда:**
+
 1. **README.md** - навигация и FAQ
 2. **ARCHITECTURE.md** - архитектура, middleware, user flows
 3. **ROLES_SYSTEM_ETAP1.md** - система ролей
@@ -208,6 +221,7 @@ const { data: enterprises } = await supabase.rpc('get_user_enterprises', {
 9. **API_CONTRACT.md** - контракт с бэкендом
 
 **Для бэкенда (уже выдано):**
+
 - BACKEND_HEADERS_GUIDE.md
 - BACKEND_API_SPEC.md
 - BACKEND_UPDATE_OWNER_MEMBERSHIP.md
@@ -343,7 +357,7 @@ NEXT_PUBLIC_COOKIE_DOMAIN=.oblikflow.com
 
 ```typescript
 // ❌ Неправильно
-'use server'
+"use server";
 export async function createEnterprise() {
   // бизнес-логика
 }
@@ -351,12 +365,12 @@ export async function createEnterprise() {
 // ✅ Правильно
 async function createEnterprise() {
   const response = await fetch(`${BACKEND_URL}/api/enterprises`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Authorization': `Bearer ${jwt}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${jwt}`,
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   });
 }
 ```
@@ -365,8 +379,8 @@ async function createEnterprise() {
 
 ```typescript
 // Development (localhost)
-if (process.env.NODE_ENV === 'development') {
-  localStorage.setItem('current_enterprise_id', id);
+if (process.env.NODE_ENV === "development") {
+  localStorage.setItem("current_enterprise_id", id);
 } else {
   // Production
   document.cookie = `current_enterprise_id=${id}; domain=${COOKIE_DOMAIN}`;
@@ -377,7 +391,9 @@ if (process.env.NODE_ENV === 'development') {
 
 ```typescript
 // Middleware делает это автоматически
-const { data: { user } } = await supabase.auth.getUser();
+const {
+  data: { user },
+} = await supabase.auth.getUser();
 // ↑ Этот вызов обновляет токен если истек
 ```
 
@@ -391,16 +407,16 @@ const { data: { user } } = await supabase.auth.getUser();
   {
     user_id: "...",
     email: "owner@example.com",
-    role: "owner",      // ← Owner
-    is_owner: true
+    role: "owner", // ← Owner
+    is_owner: true,
   },
   {
     user_id: "...",
     email: "admin@example.com",
     role: "admin",
-    is_owner: false
-  }
-]
+    is_owner: false,
+  },
+];
 ```
 
 ---
@@ -424,11 +440,11 @@ const { data: { user } } = await supabase.auth.getUser();
 ## 💬 Промпт для нового чата
 
 ```
-Привет! Мне нужно реализовать Этап 1 авторизации для Next.js монорепо 
+Привет! Мне нужно реализовать Этап 1 авторизации для Next.js монорепо
 с 4 приложениями (site, admin, workspace, platform).
 
 Проект: OBLIKflow Frontend
-Путь: /Users/igorchugurov/Documents/GitHub/OUR-pack/oblikflow/olikflow-frontend
+Путь: /Users/igorchugurov/Documents/GitHub/OUR-pack/oblikflow/Oblikflow-frontend
 
 Вся документация в /docs/auth/:
 - IMPLEMENTATION_PLAN_ETAP1.md - чеклист реализации

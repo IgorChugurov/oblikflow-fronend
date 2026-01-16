@@ -1,11 +1,11 @@
-# Olikflow Monorepo
+# Oblikflow Monorepo
 
 Монорепозиторий, содержащий четыре Next.js приложения, развернутых на разных поддоменах Vercel.
 
 ## Структура проекта
 
 ```
-olikflow-frontend/
+Oblikflow-frontend/
 ├── site/           # Основной сайт-витрина + авторизация
 │                   # Домен: oblikflow.com
 │

@@ -110,6 +110,12 @@
       "googleLoading": "Вхід..."
     }
   },
+  "home": {
+    "title": "Oblikflow",
+    "subtitle": "Ласкаво просимо до Oblikflow. Увійдіть для управління проектами.",
+    "login": "Увійти",
+    "logout": "Вийти"
+  },
   "common": {
     "loading": "Завантаження...",
     "save": "Зберегти",

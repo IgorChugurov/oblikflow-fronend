@@ -9,7 +9,7 @@ export * from "./auth";
 export * from "./enterprise";
 
 // API types
-export * from "../lib/api/types";
+export * from "../lib/api/core/types";
 
 // Supabase types
 export type { Database } from "../lib/supabase/types";

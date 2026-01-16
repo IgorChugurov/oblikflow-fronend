@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Olikflow - Platform Settings",
+  title: "Oblikflow - Platform Settings",
   description: "Platform configuration dashboard",
 };
 

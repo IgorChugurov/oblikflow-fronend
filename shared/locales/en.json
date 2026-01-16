@@ -110,6 +110,12 @@
       "googleLoading": "Signing in..."
     }
   },
+  "home": {
+    "title": "Oblikflow",
+    "subtitle": "Welcome to Oblikflow. Sign in to manage your projects.",
+    "login": "Sign In",
+    "logout": "Sign Out"
+  },
   "common": {
     "loading": "Loading...",
     "save": "Save",

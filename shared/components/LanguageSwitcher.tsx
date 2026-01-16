@@ -1,71 +1,72 @@
-"use client"
+"use client";
 
-import { useLocale, useTranslations } from 'next-intl'
-import { useRouter } from 'next/navigation'
-import { locales, localeNames, type Locale } from '../lib/i18n/config'
-import { Languages } from 'lucide-react'
+import { useLocale, useTranslations } from "next-intl";
+import { locales, localeNames, type Locale } from "../lib/i18n/config";
+import { Languages } from "lucide-react";
+import type { LocaleDto } from "../lib/api";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Button } from "./ui/button";
 
-export function LanguageSwitcher() {
-  const locale = useLocale() as Locale
-  const router = useRouter()
-  const t = useTranslations('common')
+interface LanguageSwitcherProps {
+  locales?: LocaleDto[];
+}
 
-  const switchLocale = (newLocale: Locale) => {
-    // Установить cookie
-    const cookieDomain = process.env.NODE_ENV === 'production' 
-      ? process.env.NEXT_PUBLIC_COOKIE_DOMAIN || '.oblikflow.com'
-      : undefined
+export function LanguageSwitcher({ locales: dynamicLocales }: LanguageSwitcherProps) {
+  const locale = useLocale() as Locale;
+  const t = useTranslations("common");
 
-    const cookieOptions = [
-      `locale=${newLocale}`,
-      'path=/',
-      'max-age=31536000', // 1 год
-      'SameSite=Lax',
-    ]
+  // Используем динамический список или fallback на статический
+  const availableLocales = dynamicLocales || locales.map((code) => ({
+    code,
+    name_native: localeNames[code].native,
+    name_en: localeNames[code].en,
+    is_active: true,
+  }));
 
-    if (cookieDomain) {
-      cookieOptions.push(`domain=${cookieDomain}`)
-    }
-
-    if (process.env.NODE_ENV === 'production') {
-      cookieOptions.push('secure')
-    }
-
-    document.cookie = cookieOptions.join('; ')
+  const switchLocale = (newLocale: string) => {
+    // Перенаправляем на текущую страницу с query параметром ?lang=
+    // Middleware перехватит, установит cookie и сделает redirect
+    const currentPath = window.location.pathname;
+    const currentSearch = window.location.search;
+    const searchParams = new URLSearchParams(currentSearch);
     
-    // Перезагрузить страницу для применения
-    router.refresh()
-  }
+    // Устанавливаем или обновляем параметр lang
+    searchParams.set("lang", newLocale);
+    
+    // Перезагружаем страницу с новым параметром
+    window.location.href = `${currentPath}?${searchParams.toString()}`;
+  };
+
+  // Получаем название текущего языка
+  const currentLocaleName = availableLocales.find((l) => l.code === locale)?.name_native || locale.toUpperCase();
 
   return (
-    <div className="relative inline-block text-left">
-      <button
-        type="button"
-        className="inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
-        onClick={() => {
-          const select = document.getElementById('language-select')
-          if (select) {
-            ;(select as HTMLSelectElement).click()
-          }
-        }}
-      >
-        <Languages className="h-4 w-4" />
-        <span className="hidden sm:inline">{localeNames[locale].native}</span>
-      </button>
-      
-      <select
-        id="language-select"
-        value={locale}
-        onChange={(e) => switchLocale(e.target.value as Locale)}
-        className="absolute inset-0 w-full opacity-0 cursor-pointer"
-        aria-label={t('language')}
-      >
-        {locales.map((loc) => (
-          <option key={loc} value={loc}>
-            {localeNames[loc].native}
-          </option>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="icon" title={t("language") || "Language"}>
+          <Languages className="h-[1.2rem] w-[1.2rem]" />
+          <span className="sr-only">{t("language") || "Language"}</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        {availableLocales.map((loc) => (
+          <DropdownMenuItem
+            key={loc.code}
+            onClick={() => switchLocale(loc.code)}
+            className={locale === loc.code ? "bg-accent" : ""}
+          >
+            <span className="mr-2">{loc.name_native}</span>
+            {locale === loc.code && (
+              <span className="ml-auto text-xs text-muted-foreground">✓</span>
+            )}
+          </DropdownMenuItem>
         ))}
-      </select>
-    </div>
-  )
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }
