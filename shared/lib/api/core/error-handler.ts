@@ -2,7 +2,7 @@
  * Error Handler - обработка и маппинг HTTP ошибок
  */
 
-import { ApiError, ErrorCode, HTTP_STATUS } from './types';
+import { ApiError, ErrorCode, HTTP_STATUS } from "./types";
 
 export class ErrorHandler {
   /**
@@ -27,7 +27,7 @@ export class ErrorHandler {
     switch (status) {
       case HTTP_STATUS.BAD_REQUEST:
         return {
-          message: message || 'Invalid request',
+          message: message || "Invalid request",
           code: ErrorCode.VALIDATION_ERROR,
           statusCode: status,
           details,
@@ -35,7 +35,7 @@ export class ErrorHandler {
 
       case HTTP_STATUS.UNAUTHORIZED:
         return {
-          message: message || 'Unauthorized. Please login again.',
+          message: message || "Unauthorized. Please login again.",
           code: ErrorCode.UNAUTHORIZED,
           statusCode: status,
           details,
@@ -43,7 +43,7 @@ export class ErrorHandler {
 
       case HTTP_STATUS.FORBIDDEN:
         return {
-          message: message || 'Access denied',
+          message: message || "Access denied",
           code: ErrorCode.FORBIDDEN,
           statusCode: status,
           details,
@@ -51,7 +51,7 @@ export class ErrorHandler {
 
       case HTTP_STATUS.NOT_FOUND:
         return {
-          message: message || 'Resource not found',
+          message: message || "Resource not found",
           code: ErrorCode.NOT_FOUND,
           statusCode: status,
           details,
@@ -59,7 +59,7 @@ export class ErrorHandler {
 
       case HTTP_STATUS.CONFLICT:
         return {
-          message: message || 'Resource already exists',
+          message: message || "Resource already exists",
           code: ErrorCode.CONFLICT,
           statusCode: status,
           details,
@@ -67,7 +67,7 @@ export class ErrorHandler {
 
       case HTTP_STATUS.VALIDATION_ERROR:
         return {
-          message: message || 'Validation error',
+          message: message || "Validation error",
           code: ErrorCode.VALIDATION_ERROR,
           statusCode: status,
           details,
@@ -75,7 +75,7 @@ export class ErrorHandler {
 
       case HTTP_STATUS.TOO_MANY_REQUESTS:
         return {
-          message: message || 'Too many requests. Please try again later.',
+          message: message || "Too many requests. Please try again later.",
           code: ErrorCode.TOO_MANY_REQUESTS,
           statusCode: status,
           details,
@@ -83,7 +83,7 @@ export class ErrorHandler {
 
       case HTTP_STATUS.SERVER_ERROR:
         return {
-          message: message || 'Internal server error',
+          message: message || "Internal server error",
           code: ErrorCode.SERVER_ERROR,
           statusCode: status,
           details,
@@ -93,7 +93,7 @@ export class ErrorHandler {
       case HTTP_STATUS.SERVICE_UNAVAILABLE:
       case HTTP_STATUS.GATEWAY_TIMEOUT:
         return {
-          message: message || 'Service temporarily unavailable',
+          message: message || "Service temporarily unavailable",
           code: ErrorCode.SERVICE_UNAVAILABLE,
           statusCode: status,
           details,
@@ -103,7 +103,7 @@ export class ErrorHandler {
         // Network error (status = 0)
         if (status === 0) {
           return {
-            message: message || 'Network error. Please check your connection.',
+            message: message || "Network error. Please check your connection.",
             code: ErrorCode.NETWORK_ERROR,
             statusCode: 0,
             details,
@@ -112,7 +112,7 @@ export class ErrorHandler {
 
         // Unknown error
         return {
-          message: message || 'An unexpected error occurred',
+          message: message || "An unexpected error occurred",
           code: ErrorCode.UNKNOWN,
           statusCode: status,
           details,
@@ -127,29 +127,29 @@ export class ErrorHandler {
     if (!body) return undefined;
 
     // Стандартный формат: { message: "..." }
-    if (typeof body === 'object' && body !== null) {
+    if (typeof body === "object" && body !== null) {
       const errorBody = body as Record<string, unknown>;
 
       // NestJS стандартный формат
-      if ('message' in errorBody && typeof errorBody.message === 'string') {
+      if ("message" in errorBody && typeof errorBody.message === "string") {
         return errorBody.message;
       }
 
       // Альтернативный формат: { error: { message: "..." } }
-      if ('error' in errorBody && typeof errorBody.error === 'object') {
+      if ("error" in errorBody && typeof errorBody.error === "object") {
         const errorObj = errorBody.error as Record<string, unknown>;
-        if ('message' in errorObj && typeof errorObj.message === 'string') {
+        if ("message" in errorObj && typeof errorObj.message === "string") {
           return errorObj.message;
         }
       }
 
       // Формат с массивом ошибок (validation errors)
-      if ('errors' in errorBody && Array.isArray(errorBody.errors)) {
+      if ("errors" in errorBody && Array.isArray(errorBody.errors)) {
         const firstError = errorBody.errors[0];
         if (
-          typeof firstError === 'object' &&
+          typeof firstError === "object" &&
           firstError !== null &&
-          'message' in firstError
+          "message" in firstError
         ) {
           return (firstError as { message: string }).message;
         }
@@ -164,13 +164,14 @@ export class ErrorHandler {
    */
   shouldRetry(status: number): boolean {
     // Retry только для временных ошибок
-    return [
+    const retryableStatuses = [
       HTTP_STATUS.TOO_MANY_REQUESTS,
       HTTP_STATUS.SERVER_ERROR,
       HTTP_STATUS.BAD_GATEWAY,
       HTTP_STATUS.SERVICE_UNAVAILABLE,
       HTTP_STATUS.GATEWAY_TIMEOUT,
-    ].includes(status);
+    ] as const;
+    return (retryableStatuses as readonly number[]).includes(status);
   }
 
   /**
