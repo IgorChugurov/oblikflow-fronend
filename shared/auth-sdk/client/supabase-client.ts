@@ -15,15 +15,15 @@ export function createBrowserSupabaseClient(
   supabaseUrl: string,
   supabaseAnonKey: string
 ): SupabaseClient {
-  // Проверка что мы в браузере
-  if (typeof window === 'undefined') {
-    throw new Error('createBrowserSupabaseClient can only be used in browser environment');
-  }
-
   // Настраиваем cookies с правильным domain для работы между поддоменами
   return createBrowserClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
       get(name: string) {
+        // SSR safety: если нет document, возвращаем undefined
+        if (typeof document === 'undefined') {
+          return undefined;
+        }
+        
         // Читаем cookie из document.cookie
         const value = document.cookie
           .split('; ')
@@ -32,6 +32,11 @@ export function createBrowserSupabaseClient(
         return value;
       },
       set(name: string, value: string, options: any) {
+        // SSR safety: если нет document, ничего не делаем
+        if (typeof document === 'undefined') {
+          return;
+        }
+        
         // Устанавливаем cookie с domain для всех поддоменов
         const cookieDomain = process.env.NODE_ENV === 'production'
           ? process.env.NEXT_PUBLIC_COOKIE_DOMAIN || '.oblikflow.com'
@@ -60,6 +65,11 @@ export function createBrowserSupabaseClient(
         document.cookie = cookie;
       },
       remove(name: string, options: any) {
+        // SSR safety: если нет document, ничего не делаем
+        if (typeof document === 'undefined') {
+          return;
+        }
+        
         // Удаляем cookie с тем же domain
         const cookieDomain = process.env.NODE_ENV === 'production'
           ? process.env.NEXT_PUBLIC_COOKIE_DOMAIN || '.oblikflow.com'

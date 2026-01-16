@@ -23,6 +23,7 @@ export function AuthProvider({
   const router = useRouter();
 
   // Создаем auth client один раз
+  // createBrowserSupabaseClient теперь SSR-safe
   const authClient = useMemo(() => {
     const supabase = createBrowserSupabaseClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
