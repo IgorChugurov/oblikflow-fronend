@@ -65,11 +65,13 @@ export async function proxy(request: NextRequest) {
 
   // Проверка JWT: если нет пользователя → redirect на site для авторизации
   if (!user) {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://oblikflow.com';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://oblikflow.com";
     const loginUrl = new URL("/login", siteUrl);
     // Сохраняем полный URL для возврата после авторизации
     loginUrl.searchParams.set("redirect", request.url);
-    console.log(`[admin/proxy] Redirecting to site login: ${loginUrl.toString()}`);
+    console.log(
+      `[admin/proxy] Redirecting to site login: ${loginUrl.toString()}`
+    );
     return NextResponse.redirect(loginUrl);
   }
 

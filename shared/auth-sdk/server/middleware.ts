@@ -69,8 +69,16 @@ export async function updateSession(
       cookies: {
         getAll: () => request.cookies.getAll(),
         setAll: (cookiesToSet) => {
+          const cookieDomain =
+            process.env.NODE_ENV === "production"
+              ? process.env.NEXT_PUBLIC_COOKIE_DOMAIN || ".oblikflow.com"
+              : undefined;
+
           cookiesToSet.forEach(({ name, value, options }) => {
-            response.cookies.set(name, value, options);
+            response.cookies.set(name, value, {
+              ...options,
+              domain: cookieDomain,
+            });
           });
         },
       },
@@ -101,8 +109,16 @@ export function createBaseMiddleware(config: BaseMiddlewareConfig) {
         cookies: {
           getAll: () => request.cookies.getAll(),
           setAll: (cookiesToSet) => {
+            const cookieDomain =
+              process.env.NODE_ENV === "production"
+                ? process.env.NEXT_PUBLIC_COOKIE_DOMAIN || ".oblikflow.com"
+                : undefined;
+
             cookiesToSet.forEach(({ name, value, options }) => {
-              response.cookies.set(name, value, options);
+              response.cookies.set(name, value, {
+                ...options,
+                domain: cookieDomain,
+              });
             });
           },
         },
