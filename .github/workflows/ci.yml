@@ -1,0 +1,54 @@
+name: CI - Build All Applications
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9.7.1
+      
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      
+      - name: 📚 Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: 🔍 Verify critical dependencies
+        run: |
+          echo "Checking next-intl in all applications..."
+          pnpm --filter site list next-intl --depth=0
+          pnpm --filter admin list next-intl --depth=0
+          pnpm --filter workspace list next-intl --depth=0
+          pnpm --filter platform list next-intl --depth=0
+          echo "✅ All critical dependencies present"
+      
+      - name: 🏗️ Build site
+        run: pnpm --filter site build
+      
+      - name: 🏗️ Build admin
+        run: pnpm --filter admin build
+      
+      - name: 🏗️ Build workspace
+        run: pnpm --filter workspace build
+      
+      - name: 🏗️ Build platform
+        run: pnpm --filter platform build
+      
+      - name: ✅ All builds successful
+        run: echo "🎉 All applications built successfully!"
