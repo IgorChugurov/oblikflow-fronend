@@ -15,6 +15,11 @@ export function createBrowserSupabaseClient(
   supabaseUrl: string,
   supabaseAnonKey: string
 ): SupabaseClient {
+  // Проверка что мы в браузере
+  if (typeof window === 'undefined') {
+    throw new Error('createBrowserSupabaseClient can only be used in browser environment');
+  }
+
   // Настраиваем cookies с правильным domain для работы между поддоменами
   return createBrowserClient(supabaseUrl, supabaseAnonKey, {
     cookies: {

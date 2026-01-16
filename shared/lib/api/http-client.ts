@@ -23,7 +23,7 @@ const DEFAULT_BASE_URL =
 export class HttpClient {
   private requestHandler: RequestHandler;
   private errorHandler: ErrorHandler;
-  private authHandler: AuthHandler;
+  private _authHandler: AuthHandler | null = null;
   private retryHandler: RetryHandler;
   private queueHandler: QueueHandler;
   private requestInterceptors: RequestInterceptor[] = [];
@@ -34,11 +34,25 @@ export class HttpClient {
 
     this.requestHandler = new RequestHandler(baseUrl);
     this.errorHandler = new ErrorHandler();
-    this.authHandler = new AuthHandler();
+    // AuthHandler создается lazy (только в браузере)
     this.retryHandler = new RetryHandler(config.retryConfig);
 
     const queueMaxSize = config.queueMaxSize || 50;
     this.queueHandler = new QueueHandler(queueMaxSize);
+  }
+
+  /**
+   * Получить AuthHandler (lazy initialization)
+   */
+  private get authHandler(): AuthHandler {
+    if (!this._authHandler) {
+      // Создаем только в браузере
+      if (typeof window === 'undefined') {
+        throw new Error('AuthHandler can only be used in browser environment');
+      }
+      this._authHandler = new AuthHandler();
+    }
+    return this._authHandler;
   }
 
   /**
