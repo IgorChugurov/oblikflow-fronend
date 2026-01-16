@@ -3,5 +3,6 @@
   "buildCommand": "cd .. && pnpm install && pnpm --filter platform build",
   "installCommand": "cd .. && pnpm install --frozen-lockfile=false",
   "framework": "nextjs",
-  "outputDirectory": ".next"
+  "outputDirectory": ".next",
+  "ignoreCommand": "git diff --quiet 'HEAD^' HEAD -- . ../shared ../pnpm-lock.yaml ../package.json ../tsconfig.base.json"
 }
