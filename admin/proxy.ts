@@ -61,7 +61,22 @@ export async function proxy(request: NextRequest) {
     }
   }
 
+  console.log("[admin/proxy] Request URL:", request.url);
+  console.log("[admin/proxy] Pathname:", pathname);
+  console.log(
+    "[admin/proxy] All cookies:",
+    request.cookies
+      .getAll()
+      .map((c) => `${c.name}=${c.value.substring(0, 20)}...`)
+      .join(", ")
+  );
+
   const { response, user } = await baseMiddleware(request);
+
+  console.log(
+    "[admin/proxy] User after baseMiddleware:",
+    user ? `${user.id} (${user.email})` : "null"
+  );
 
   // Проверка JWT: если нет пользователя → redirect на site для авторизации
   if (!user) {
@@ -70,11 +85,12 @@ export async function proxy(request: NextRequest) {
     // Сохраняем полный URL для возврата после авторизации
     loginUrl.searchParams.set("redirect", request.url);
     console.log(
-      `[admin/proxy] Redirecting to site login: ${loginUrl.toString()}`
+      `[admin/proxy] No user found! Redirecting to site login: ${loginUrl.toString()}`
     );
     return NextResponse.redirect(loginUrl);
   }
 
+  console.log("[admin/proxy] User authenticated, allowing access");
   // Пользователь авторизован → пропускаем
   // Backend API сам вернет список предприятий (может быть пустым)
   return response;

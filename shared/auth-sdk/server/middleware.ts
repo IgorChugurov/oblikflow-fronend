@@ -102,6 +102,13 @@ export function createBaseMiddleware(config: BaseMiddlewareConfig) {
   return async (request: NextRequest): Promise<BaseMiddlewareResult> => {
     const response = NextResponse.next({ request });
 
+    // Debug: логируем входящие cookies
+    const incomingCookies = request.cookies.getAll();
+    console.log(
+      "[middleware] Incoming cookies:",
+      incomingCookies.map((c) => c.name).join(", ")
+    );
+
     const supabase = createServerClient(
       config.supabaseUrl,
       config.supabaseAnonKey,
@@ -114,11 +121,27 @@ export function createBaseMiddleware(config: BaseMiddlewareConfig) {
                 ? process.env.NEXT_PUBLIC_COOKIE_DOMAIN || ".oblikflow.com"
                 : undefined;
 
+            console.log(
+              "[middleware] Setting cookies with domain:",
+              cookieDomain
+            );
+            console.log("[middleware] NODE_ENV:", process.env.NODE_ENV);
+            console.log(
+              "[middleware] NEXT_PUBLIC_COOKIE_DOMAIN:",
+              process.env.NEXT_PUBLIC_COOKIE_DOMAIN
+            );
+
             cookiesToSet.forEach(({ name, value, options }) => {
               response.cookies.set(name, value, {
                 ...options,
                 domain: cookieDomain,
               });
+              console.log(
+                "[middleware] Set cookie:",
+                name,
+                "with domain:",
+                cookieDomain
+              );
             });
           },
         },
@@ -128,6 +151,8 @@ export function createBaseMiddleware(config: BaseMiddlewareConfig) {
     const {
       data: { user: supabaseUser },
     } = await supabase.auth.getUser();
+
+    console.log("[middleware] User:", supabaseUser ? supabaseUser.id : "null");
 
     const user = transformSupabaseUser(supabaseUser);
 
