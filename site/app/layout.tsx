@@ -6,8 +6,7 @@ import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
 import { cn } from "shared/lib/utils";
 
-import { ThemeProvider } from "shared/providers/ThemeProvider";
-import { AuthProvider } from "shared/providers/AuthProvider";
+import { ThemeProvider, AuthProvider } from "shared";
 import Navbar from "shared/components/Navbar";
 import { Toaster } from "shared/components/ui/toaster";
 import { GlobalLoader } from "shared/components/GlobalLoader";

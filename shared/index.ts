@@ -55,6 +55,10 @@ export { UpdatePasswordForm } from "./auth-sdk/components/UpdatePasswordForm";
 export { OAuthButtons } from "./auth-sdk/components/OAuthButtons";
 export { ResetPasswordClient } from "./auth-sdk/components/ResetPasswordClient";
 
+// Providers
+export { ThemeProvider } from "./providers/ThemeProvider";
+export type { ThemeProviderProps } from "next-themes";
+
 // Auth SDK hooks and providers
 export { useAuth } from "./providers/AuthProvider";
 export { AuthProvider } from "./providers/AuthProvider";
