@@ -13,7 +13,7 @@ export class ServerAuthClient {
   /**
    * Получение текущего пользователя на сервере
    * Возвращает базовую информацию о пользователе из Supabase Auth
-   * 
+   *
    * Проверки ролей и доступов выполняются:
    * - В middleware через Backend API (для рендеринга приложений)
    * - В Backend API при запросах данных
@@ -78,10 +78,11 @@ export class ServerAuthClient {
 
 /**
  * Создание серверного клиента авторизации
- * @param supabase - Supabase клиент (созданный через createServerSupabaseClient)
+ * @param supabase - Supabase клиент (созданный через createServerClient)
  * @returns ServerAuthClient
  */
-export function createServerAuthClient(supabase: SupabaseClient): ServerAuthClient {
+export function createServerAuthClient(
+  supabase: SupabaseClient
+): ServerAuthClient {
   return new ServerAuthClient(supabase);
 }
-

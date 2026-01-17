@@ -15,9 +15,8 @@ export {
 } from "./lib/navigation";
 
 // Supabase exports (use auth-sdk instead)
-// NOTE: Supabase clients should be imported from auth-sdk:
+// NOTE: Supabase client should be imported from auth-sdk (client only):
 // Client: import { createBrowserSupabaseClient } from "shared/auth-sdk/client";
-// Server: import { createServerSupabaseClient } from "shared/auth-sdk/server";
 
 // API exports
 export {

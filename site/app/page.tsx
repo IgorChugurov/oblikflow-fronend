@@ -1,20 +1,12 @@
 import Link from "next/link";
 import { Button } from "shared";
 import { LogoutButton } from "./LogoutButton";
-import {
-  createServerSupabaseClient,
-  createServerAuthClient,
-} from "shared/auth-sdk/server";
+import { getServerUserFromHeaders } from "shared/auth-sdk/utils/headers";
 import { getTranslations } from "next-intl/server";
 
 export default async function Home() {
-  // Проверяем, залогинен ли пользователь
-  const supabase = createServerSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-  const authClient = createServerAuthClient(supabase);
-  const user = await authClient.getUser();
+  // Получаем пользователя из headers, установленных middleware
+  const user = await getServerUserFromHeaders();
 
   const t = await getTranslations("home");
 
@@ -38,7 +30,10 @@ export default async function Home() {
           {user ? (
             <LogoutButton />
           ) : (
-            <Button asChild className="h-12 w-full rounded-full px-5 md:w-[158px]">
+            <Button
+              asChild
+              className="h-12 w-full rounded-full px-5 md:w-[158px]"
+            >
               <Link href="/login">{t("login")}</Link>
             </Button>
           )}
