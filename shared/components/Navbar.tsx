@@ -1,6 +1,7 @@
 "use client";
-import { LogOut, Moon, Sun, User } from "lucide-react";
+import { LogOut, Moon, Sun, User as UserIcon } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   DropdownMenu,
@@ -15,21 +16,26 @@ import { useTheme } from "next-themes";
 // import { SidebarTrigger } from "./ui/sidebar";
 import { useAuth } from "../providers/AuthProvider";
 import { LanguageSwitcher } from "./LanguageSwitcher";
-import type { LocaleDto } from "../lib/api";
+import { useLocales } from "../api/hooks";
+import type { User } from "../auth-sdk/types";
 
 interface NavbarProps {
-  locales?: LocaleDto[];
+  user?: User | null;
 }
 
-const Navbar = ({ locales }: NavbarProps) => {
+const Navbar = ({ user }: NavbarProps) => {
+  const { data: localesData } = useLocales();
+  const t = useTranslations("navbar");
   const { setTheme } = useTheme();
-  const { user, logout, isLoading } = useAuth();
+  const { logout } = useAuth();
 
   const handleLogout = async () => {
     try {
       await logout();
     } catch (error) {
       console.error("Logout failed:", error);
+      // Fallback: прямая перезагрузка на login
+      window.location.href = "/login";
     }
   };
 
@@ -60,10 +66,20 @@ const Navbar = ({ locales }: NavbarProps) => {
         {/* <SidebarTrigger /> */}
         <div className="flex-1 min-w-0 px-4">{/* <Breadcrumbs /> */}</div>
         <div className="flex items-center gap-4">
-          <Link href="/">Dashboard</Link>
+          {/* Conditional navigation link */}
+          {user ? (
+            <a
+              href={process.env.NEXT_PUBLIC_ADMIN_URL || "/admin"}
+              className="hover:underline"
+            >
+              {t("dashboard")}
+            </a>
+          ) : (
+            <Link href="/login">{t("login")}</Link>
+          )}
 
           {/* language switcher */}
-          <LanguageSwitcher locales={locales} />
+          <LanguageSwitcher locales={localesData?.data} />
 
           {/* theme menu */}
           <DropdownMenu>
@@ -87,39 +103,37 @@ const Navbar = ({ locales }: NavbarProps) => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* user menu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Avatar>
-                <AvatarImage
-                  src={user?.avatar || "https://github.com/shadcn.png"}
-                />
-                <AvatarFallback>{getUserInitials(user)}</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent sideOffset={10}>
-              <DropdownMenuLabel>
-                {user?.firstName && user?.lastName
-                  ? `${user.firstName} ${user.lastName}`
-                  : user?.email || "My Account"}
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/profile" className="flex items-center">
-                  <User className="h-[1.2rem] w-[1.2rem] mr-2" />
-                  Profile
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                variant="destructive"
-                onClick={handleLogout}
-                disabled={isLoading}
-              >
-                <LogOut className="h-[1.2rem] w-[1.2rem] mr-2" />
-                {isLoading ? "Logging out..." : "Logout"}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/* user menu - only show when authenticated */}
+          {user && (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Avatar>
+                  <AvatarImage
+                    src={user?.avatar || "https://github.com/shadcn.png"}
+                  />
+                  <AvatarFallback>{getUserInitials(user)}</AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent sideOffset={10}>
+                <DropdownMenuLabel>
+                  {user?.firstName && user?.lastName
+                    ? `${user.firstName} ${user.lastName}`
+                    : user?.email || t("myAccount")}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/profile" className="flex items-center">
+                    <UserIcon className="h-[1.2rem] w-[1.2rem] mr-2" />
+                    {t("profile")}
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem variant="destructive" onClick={handleLogout}>
+                  <LogOut className="h-[1.2rem] w-[1.2rem] mr-2" />
+                  {t("logout")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </div>
     </nav>

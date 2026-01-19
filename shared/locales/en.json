@@ -116,6 +116,17 @@
     "login": "Sign In",
     "logout": "Sign Out"
   },
+  "navbar": {
+    "dashboard": "Dashboard",
+    "login": "Sign In",
+    "profile": "Profile",
+    "logout": "Sign Out",
+    "myAccount": "My Account",
+    "loggingOut": "Signing out..."
+  },
+  "admin": {
+    "appName": "Enterprise Management"
+  },
   "common": {
     "loading": "Loading...",
     "save": "Save",

@@ -10,7 +10,7 @@ import { isValidLocale } from "shared/lib/i18n/config";
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  
+
   // Обработка смены языка через query параметр ?lang=
   const langParam = request.nextUrl.searchParams.get("lang");
   if (langParam) {
@@ -19,15 +19,16 @@ export async function proxy(request: NextRequest) {
       // Создаем URL без query параметра lang
       const url = request.nextUrl.clone();
       url.searchParams.delete("lang");
-      
+
       // Создаем response с редиректом
       const response = NextResponse.redirect(url);
-      
+
       // Устанавливаем cookie с новым языком (используем NEXT_LOCALE как стандарт next-intl)
-      const cookieDomain = process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_COOKIE_DOMAIN || ".oblikflow.com"
-        : undefined;
-      
+      const cookieDomain =
+        process.env.NODE_ENV === "production"
+          ? process.env.NEXT_PUBLIC_COOKIE_DOMAIN || ".oblikflow.com"
+          : undefined;
+
       response.cookies.set("NEXT_LOCALE", langParam, {
         path: "/",
         domain: cookieDomain,
@@ -35,7 +36,7 @@ export async function proxy(request: NextRequest) {
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
       });
-      
+
       console.log(`[proxy] Language switched to: ${langParam}`);
       return response;
     } else {
@@ -96,7 +97,9 @@ const publicRoutes = [
 ];
 
 export const config = {
+  // Оптимизированный matcher - исключаем все assets
+  // Middleware выполняется только для HTML страниц
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|css|js|ico|woff|woff2|ttf|eot|otf|map|json)$).*)",
   ],
 };

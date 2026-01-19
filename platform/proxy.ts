@@ -69,11 +69,13 @@ export async function proxy(request: NextRequest) {
   // ШАГ 1: Проверка JWT
   // ============================================================================
   if (!user) {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://oblikflow.com';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://oblikflow.com";
     const loginUrl = new URL("/login", siteUrl);
     // Сохраняем полный URL для возврата после авторизации
     loginUrl.searchParams.set("redirect", request.url);
-    console.log(`[platform/proxy] Redirecting to site login: ${loginUrl.toString()}`);
+    console.log(
+      `[platform/proxy] Redirecting to site login: ${loginUrl.toString()}`
+    );
     return NextResponse.redirect(loginUrl);
   }
 
@@ -87,7 +89,7 @@ export async function proxy(request: NextRequest) {
 
   if (!token) {
     // Нет токена (не должно произойти, но на всякий случай)
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://oblikflow.com';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://oblikflow.com";
     const loginUrl = new URL("/login", siteUrl);
     loginUrl.searchParams.set("redirect", request.url);
     return NextResponse.redirect(loginUrl);
@@ -97,7 +99,8 @@ export async function proxy(request: NextRequest) {
 
   if (!isSuperAdmin) {
     // Не superAdmin → redirect на admin
-    const adminUrl = process.env.NEXT_PUBLIC_ADMIN_URL || 'https://admin.oblikflow.com';
+    const adminUrl =
+      process.env.NEXT_PUBLIC_ADMIN_URL || "https://admin.oblikflow.com";
     return NextResponse.redirect(new URL("/", adminUrl));
   }
 
@@ -112,7 +115,9 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
+  // Оптимизированный matcher - исключаем все assets
+  // Middleware выполняется только для HTML страниц
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|css|js|ico|woff|woff2|ttf|eot|otf|map|json)$).*)",
   ],
 };

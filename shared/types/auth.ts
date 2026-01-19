@@ -19,16 +19,6 @@ export interface AuthState {
   isAuthenticated: boolean;
 }
 
-// Роли в системе
-export type Role = "owner" | "admin" | null;
-
-// Роль пользователя в предприятии
-export interface UserRole {
-  enterpriseId: string;
-  role: Role;
-  isOwner: boolean;
-}
-
 // Credentials для логина
 export interface LoginCredentials {
   email: string;

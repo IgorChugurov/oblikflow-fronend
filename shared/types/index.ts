@@ -5,11 +5,8 @@
 // Auth types
 export * from "./auth";
 
-// Enterprise types
-export * from "./enterprise";
-
-// API types
-export * from "../lib/api/core/types";
+// Enterprises API types (full API types)
+export * from "./enterprises";
 
 // Supabase types
 export type { Database } from "../lib/supabase/types";

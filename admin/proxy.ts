@@ -22,6 +22,9 @@ const baseMiddleware = createBaseMiddleware({
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
+  // DEBUG: Логируем ВСЕ запросы проходящие через middleware
+  console.log(`[admin/proxy] 🔵 MIDDLEWARE HIT: ${pathname}`);
+
   // ============================================================================
   // ШАГ 0: Обработка смены языка через query параметр ?lang=
   // ============================================================================
@@ -61,16 +64,6 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  console.log("[admin/proxy] Request URL:", request.url);
-  console.log("[admin/proxy] Pathname:", pathname);
-  console.log(
-    "[admin/proxy] All cookies:",
-    request.cookies
-      .getAll()
-      .map((c) => `${c.name}=${c.value.substring(0, 20)}...`)
-      .join(", ")
-  );
-
   const { response, user } = await baseMiddleware(request);
 
   console.log(
@@ -101,7 +94,20 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
+  // Очень агрессивный matcher - middleware ТОЛЬКО для корневых HTML страниц
+  // Исключаем абсолютно все: _next, api, и любые файлы с точкой в имени
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    /*
+     * Match:
+     * - / (root)
+     * - /any-page
+     * - /nested/page
+     * 
+     * NOT match:
+     * - /_next/* (Next.js internals)
+     * - /api/* (API routes)
+     * - /*.* (any file with extension)
+     */
+    "/((?!api/|_next/|.*\\..*).*)",
   ],
 };

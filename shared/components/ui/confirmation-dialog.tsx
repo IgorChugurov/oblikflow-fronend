@@ -7,7 +7,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "shared/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -15,9 +15,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "shared/components/ui/dialog";
+import { Input } from "shared/components/ui/input";
+import { Label } from "shared/components/ui/label";
 
 export interface ConfirmationDialogProps {
   /** Whether the dialog is open */

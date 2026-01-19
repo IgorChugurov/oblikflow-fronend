@@ -10,6 +10,7 @@ import { transformSupabaseUser } from "../utils/transform";
 import type { User, MiddlewareConfig } from "../types";
 import { getPreferredLocale, isValidLocale } from "../../lib/i18n/config";
 import { redirectAuthenticatedUsers } from "./middleware-utils";
+import { sessionCache, generateSessionCacheKey } from "./session-cache";
 
 /**
  * Результат обновления сессии
@@ -148,14 +149,57 @@ export function createBaseMiddleware(config: BaseMiddlewareConfig) {
       }
     );
 
-    const {
-      data: { user: supabaseUser },
-    } = await supabase.auth.getUser();
+    // ============================================================================
+    // ✅ ОПТИМИЗАЦИЯ: Используем getSession() вместо getUser()
+    // getSession() - читает JWT из cookies БЕЗ network запроса (быстро)
+    // getUser() - делает network запрос к Supabase API (медленно)
+    // ============================================================================
 
-    console.log("[middleware] User:", supabaseUser ? supabaseUser.id : "null");
+    // Генерируем cache key из session токенов
+    const cookiesMap = new Map(
+      request.cookies.getAll().map((c) => [c.name, c.value])
+    );
+    const cacheKey = generateSessionCacheKey(cookiesMap);
 
-    const user = transformSupabaseUser(supabaseUser);
+    // Проверяем кеш
+    const cachedUser = sessionCache.get(cacheKey);
+    let user: User | null = null;
+    let supabaseUser: SupabaseUser | null = null;
+    let fromCache = false;
 
+    if (cachedUser !== undefined) {
+      // Cache HIT
+      user = cachedUser;
+      fromCache = true;
+      console.log("[middleware] Cache HIT for user:", user?.id || "null");
+    } else {
+      // Cache MISS - получаем из Supabase
+      // ✅ getSession() - БЕЗ network запроса, только читает JWT из cookies
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+
+      if (error) {
+        console.warn("[middleware] getSession error:", error.message);
+      }
+
+      supabaseUser = session?.user || null;
+      user = transformSupabaseUser(supabaseUser);
+
+      // Сохраняем в кеш
+      sessionCache.set(cacheKey, user);
+
+      console.log("[middleware] Cache MISS, fetched user:", user?.id || "null");
+    }
+
+    console.log(
+      "[middleware] User:",
+      user?.id || "null",
+      fromCache ? "(from cache)" : "(fresh)"
+    );
+
+    // Locale handling
     const localeCookieName =
       config.localeCookieName || DEFAULT_LOCALE_COOKIE_NAME;
     const cookieLocale = request.cookies.get(localeCookieName)?.value;

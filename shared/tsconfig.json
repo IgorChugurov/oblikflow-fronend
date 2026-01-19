@@ -11,7 +11,11 @@
     "skipLibCheck": true,
     "jsx": "react-jsx",
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "shared/*": ["./*"]
+    }
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
