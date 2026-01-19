@@ -2,9 +2,11 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { FormRenderer } from 'shared/listsAndForms/form-generation';
 import { useCreateEnterprise, useUpdateEnterprise, useEnterprise } from 'shared/api/hooks/enterprises';
 import { useToast } from 'shared/hooks/use-toast';
+import { useLocalizedConfig } from 'shared/listsAndForms/utils/useLocalizedConfig';
 import enterprisesConfig from 'shared/listsAndForms/configuration-setup/enterprises.config.json';
 import type { CreateEnterpriseDto, UpdateEnterpriseDto } from 'shared/types/enterprises';
 
@@ -22,6 +24,10 @@ interface EnterpriseFormWrapperProps {
 export function EnterpriseFormWrapper({ mode, enterpriseId }: EnterpriseFormWrapperProps) {
   const router = useRouter();
   const { toast } = useToast();
+  const t = useTranslations();
+  
+  // Локализуем конфиг
+  const localizedConfig = useLocalizedConfig(enterprisesConfig);
   
   // Загружаем данные для edit режима
   const { data: enterpriseResponse, isLoading: isLoadingEnterprise } = useEnterprise(
@@ -32,8 +38,8 @@ export function EnterpriseFormWrapper({ mode, enterpriseId }: EnterpriseFormWrap
   const enterprise = enterpriseResponse?.data;
   
   // Mutations
-  const createMutation = useCreateEnterprise();
-  const updateMutation = useUpdateEnterprise(enterpriseId!);
+  const createMutation = useCreateEnterprise('admin');
+  const updateMutation = useUpdateEnterprise(enterpriseId!, 'admin');
   
   // Delete handler (soft delete - change status to suspended)
   const handleDelete = async () => {
@@ -42,23 +48,23 @@ export function EnterpriseFormWrapper({ mode, enterpriseId }: EnterpriseFormWrap
     try {
       await updateMutation.mutateAsync({ status: 'suspended' });
       toast({
-        title: 'Підприємство призупинено',
-        description: 'Статус підприємства змінено на "призупинено".',
+        title: t('entities.enterprises.toast.suspended'),
+        description: t('entities.enterprises.toast.suspendedDescription'),
       });
       router.push('/');
     } catch (error: any) {
       toast({
-        title: 'Помилка',
-        description: error.message || 'Не вдалося призупинити підприємство.',
+        title: t('errors.generic'),
+        description: error.message || t('entities.enterprises.toast.suspendError'),
         variant: 'destructive',
       });
     }
   };
   
-  // Определяем конфигурацию в зависимости от режима
+  // Определяем локализованную конфигурацию в зависимости от режима
   const formConfig = mode === 'create' 
-    ? enterprisesConfig.formCreate 
-    : enterprisesConfig.formEdit;
+    ? localizedConfig.formCreate 
+    : localizedConfig.formEdit;
   
   // Обработчик отправки
   const handleSubmit = async (data: CreateEnterpriseDto | UpdateEnterpriseDto) => {
@@ -66,14 +72,14 @@ export function EnterpriseFormWrapper({ mode, enterpriseId }: EnterpriseFormWrap
       if (mode === 'create') {
         await createMutation.mutateAsync(data as CreateEnterpriseDto);
         toast({
-          title: 'Підприємство створено',
-          description: 'Підприємство успішно додано до списку.',
+          title: t('entities.enterprises.formCreate.successMessage'),
+          description: t('entities.enterprises.toast.createdDescription'),
         });
       } else {
         await updateMutation.mutateAsync(data as UpdateEnterpriseDto);
         toast({
-          title: 'Підприємство оновлено',
-          description: 'Зміни успішно збережено.',
+          title: t('entities.enterprises.formEdit.successMessage'),
+          description: t('entities.enterprises.toast.updatedDescription'),
         });
       }
       
@@ -81,8 +87,8 @@ export function EnterpriseFormWrapper({ mode, enterpriseId }: EnterpriseFormWrap
       router.push('/');
     } catch (error: any) {
       toast({
-        title: 'Помилка',
-        description: error.message || 'Не вдалося зберегти зміни.',
+        title: t('errors.generic'),
+        description: error.message || t('entities.enterprises.toast.saveError'),
         variant: 'destructive',
       });
     }
@@ -99,7 +105,7 @@ export function EnterpriseFormWrapper({ mode, enterpriseId }: EnterpriseFormWrap
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Завантаження...</p>
+          <p className="mt-4 text-muted-foreground">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -110,15 +116,15 @@ export function EnterpriseFormWrapper({ mode, enterpriseId }: EnterpriseFormWrap
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <h2 className="text-2xl font-bold mb-2">Підприємство не знайдено</h2>
+          <h2 className="text-2xl font-bold mb-2">{t('entities.enterprises.notFound')}</h2>
           <p className="text-muted-foreground mb-4">
-            Можливо, воно було видалено або у вас немає доступу.
+            {t('entities.enterprises.notFoundDescription')}
           </p>
           <button
             onClick={handleCancel}
             className="text-primary hover:underline"
           >
-            Повернутися до списку
+            {t('entities.enterprises.backToList')}
           </button>
         </div>
       </div>
@@ -142,14 +148,11 @@ export function EnterpriseFormWrapper({ mode, enterpriseId }: EnterpriseFormWrap
       onCancel={handleCancel}
       onDelete={mode === 'edit' ? handleDelete : undefined}
       isLoading={createMutation.isPending || updateMutation.isPending}
-      pageTitle={
-        mode === 'create' 
-          ? 'Створити підприємство' 
-          : 'Редагувати підприємство'
-      }
-      submitButtonText={mode === 'create' ? 'Створити' : 'Зберегти'}
-      cancelButtonText="Скасувати"
-      deleteButtonText="Призупинити"
+      pageTitle={formConfig.ui.pageTitle}
+      pageDescription={formConfig.ui.pageDescription}
+      submitButtonText={formConfig.ui.submitButtonText}
+      cancelButtonText={formConfig.ui.cancelButtonText}
+      deleteButtonText={t('entities.enterprises.suspendButton')}
     />
   );
 }

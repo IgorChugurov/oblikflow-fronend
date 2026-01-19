@@ -28,6 +28,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { enterprisesSDK } from '../../sdk';
+import { detailKeys } from '../../../lib/api/core/query-keys';
 import type { EnterpriseDetailsResponse } from '../../../types/enterprises';
 
 interface UseEnterpriseOptions {
@@ -36,7 +37,7 @@ interface UseEnterpriseOptions {
 
 export function useEnterprise(id: string, options?: UseEnterpriseOptions) {
   return useQuery<EnterpriseDetailsResponse, Error>({
-    queryKey: ['enterprise', id],
+    queryKey: detailKeys.enterprise(id),
     queryFn: async () => {
       const result = await enterprisesSDK.getById(id);
       

@@ -25,11 +25,12 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { enterprisesSDK } from "../../sdk";
+import { listKeys } from "../../../lib/api/core/query-keys";
 import type { EnterpriseListResponse } from "../../../types/enterprises";
 
-export function useEnterprises() {
+export function useEnterprises(projectId = 'admin') {
   return useQuery<EnterpriseListResponse, Error>({
-    queryKey: ["enterprises"],
+    queryKey: listKeys.all(projectId, "enterprises"),
     queryFn: async () => {
       const result = await enterprisesSDK.getAll();
 

@@ -13,6 +13,7 @@ import React from 'react';
 import { UniversalEntityListClient } from 'shared/listsAndForms/universal-list';
 import { enterprisesSDK } from 'shared/api/sdk';
 import enterprisesConfig from 'shared/listsAndForms/configuration-setup/enterprises.config.json';
+import { useLocalizedConfig } from 'shared/listsAndForms/utils/useLocalizedConfig';
 import type { Enterprise } from 'shared/types/enterprises';
 import type { LoadDataFn, LoadDataResult, ListSpec } from 'shared/listsAndForms/types';
 
@@ -22,9 +23,10 @@ interface EnterprisesListWrapperProps {
 
 export function EnterprisesListWrapper({ readOnly = false }: EnterprisesListWrapperProps) {
   // ========================================
-  // 1. Конфигурация из JSON
+  // 1. Локализация конфигурации
   // ========================================
-  const listSpec = enterprisesConfig.list as ListSpec;
+  const localizedConfig = useLocalizedConfig(enterprisesConfig);
+  const listSpec = localizedConfig.list as ListSpec;
 
   // ========================================
   // 2. onLoadData - Адаптер SDK → Universal
@@ -144,7 +146,7 @@ export function EnterprisesListWrapper({ readOnly = false }: EnterprisesListWrap
       routing={routing}
       onLoadData={onLoadData}
       onDelete={onDelete}
-      onRowClick={handleRowClick}
+      // onRowClick={handleRowClick}
       readOnly={readOnly}
     />
   );

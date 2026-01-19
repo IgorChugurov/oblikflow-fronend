@@ -5,18 +5,18 @@
   "entityDefinitionId": "enterprises",
 
   "list": {
-    "pageTitle": "Мої підприємства",
-    "description": "Керування підприємствами та доступом до них",
-    "searchPlaceholder": "Пошук підприємств за назвою...",
-    "emptyStateTitle": "Немає підприємств",
+    "pageTitle": "entities.enterprises.list.pageTitle",
+    "description": "entities.enterprises.list.description",
+    "searchPlaceholder": "entities.enterprises.list.searchPlaceholder",
+    "emptyStateTitle": "entities.enterprises.list.emptyStateTitle",
     "emptyStateMessages": [
-      "Створіть своє перше підприємство, щоб почати роботу",
-      "Підприємство - це організація, яка об'єднує проєкти та команду"
+      "entities.enterprises.list.emptyStateMessage1",
+      "entities.enterprises.list.emptyStateMessage2"
     ],
 
     "showSearch": true,
     "showCreateButton": true,
-    "createButtonText": "Створити підприємство",
+    "createButtonText": "entities.enterprises.list.createButtonText",
 
     "enablePagination": true,
     "pageSize": 20,
@@ -28,14 +28,14 @@
       {
         "id": "name",
         "name": "name",
-        "label": "Назва",
+        "label": "entities.enterprises.list.columns.name.label",
         "type": "link",
         "displayInTable": true,
         "displayIndex": 0,
         "searchable": true,
         "sortable": true,
         "width": "40%",
-        "description": "Назва підприємства",
+        "description": "entities.enterprises.list.columns.name.description",
         "urlTemplate": "/workspace?enterprise_id={id}",
         "external": true,
         "externalBaseUrl": "WORKSPACE"
@@ -43,28 +43,28 @@
       {
         "id": "country_code",
         "name": "country_code",
-        "label": "Країна",
+        "label": "entities.enterprises.list.columns.country_code.label",
         "type": "badge",
         "displayInTable": true,
         "displayIndex": 1,
         "width": "10%",
         "variant": "secondary",
-        "description": "Код країни реєстрації"
+        "description": "entities.enterprises.list.columns.country_code.description"
       },
       {
         "id": "default_currency",
         "name": "default_currency",
-        "label": "Валюта",
+        "label": "entities.enterprises.list.columns.default_currency.label",
         "type": "text",
         "displayInTable": true,
         "displayIndex": 2,
         "width": "10%",
-        "description": "Валюта обліку"
+        "description": "entities.enterprises.list.columns.default_currency.description"
       },
       {
         "id": "status",
         "name": "status",
-        "label": "Статус",
+        "label": "entities.enterprises.list.columns.status.label",
         "type": "badge",
         "displayInTable": true,
         "displayIndex": 3,
@@ -75,16 +75,16 @@
           "suspended": "destructive"
         },
         "labelMap": {
-          "active": "Активне",
-          "inactive": "Неактивне",
-          "suspended": "Призупинено"
+          "active": "entities.enterprises.list.columns.status.active",
+          "inactive": "entities.enterprises.list.columns.status.inactive",
+          "suspended": "entities.enterprises.list.columns.status.suspended"
         },
-        "description": "Статус підприємства"
+        "description": "entities.enterprises.list.columns.status.description"
       },
       {
         "id": "is_owner",
         "name": "is_owner",
-        "label": "Роль",
+        "label": "entities.enterprises.list.columns.is_owner.label",
         "type": "badge",
         "displayInTable": true,
         "displayIndex": 4,
@@ -95,20 +95,20 @@
           "false": "outline"
         },
         "labelMap": {
-          "true": "Власник",
-          "false": "Адміністратор"
+          "true": "entities.enterprises.list.columns.is_owner.owner",
+          "false": "entities.enterprises.list.columns.is_owner.admin"
         },
-        "description": "Ваша роль в підприємстві"
+        "description": "entities.enterprises.list.columns.is_owner.description"
       },
       {
         "id": "created_at",
         "name": "created_at",
-        "label": "Створено",
+        "label": "entities.enterprises.list.columns.created_at.label",
         "type": "date",
         "displayInTable": false,
         "displayIndex": 5,
         "format": "dd.MM.yyyy",
-        "description": "Дата створення"
+        "description": "entities.enterprises.list.columns.created_at.description"
       }
     ],
 
@@ -116,22 +116,22 @@
       {
         "id": "status",
         "name": "status",
-        "label": "Статус",
+        "label": "entities.enterprises.list.filters.status.label",
         "type": "select",
         "options": [
-          { "value": "active", "label": "Активні" },
-          { "value": "inactive", "label": "Неактивні" },
-          { "value": "suspended", "label": "Призупинені" }
+          { "value": "active", "label": "entities.enterprises.list.filters.status.active" },
+          { "value": "inactive", "label": "entities.enterprises.list.filters.status.inactive" },
+          { "value": "suspended", "label": "entities.enterprises.list.filters.status.suspended" }
         ]
       },
       {
         "id": "role",
         "name": "is_owner",
-        "label": "Роль",
+        "label": "entities.enterprises.list.filters.role.label",
         "type": "select",
         "options": [
-          { "value": "true", "label": "Власник" },
-          { "value": "false", "label": "Адміністратор" }
+          { "value": "true", "label": "entities.enterprises.list.filters.role.owner" },
+          { "value": "false", "label": "entities.enterprises.list.filters.role.admin" }
         ]
       }
     ],
@@ -140,7 +140,7 @@
       {
         "id": "edit",
         "type": "edit",
-        "label": "Редагувати",
+        "label": "form.buttons.edit",
         "icon": "Pencil",
         "variant": "ghost",
         "urlTemplate": "/enterprises/{id}/edit"
@@ -148,23 +148,23 @@
       {
         "id": "members",
         "type": "link",
-        "label": "Учасники",
+        "label": "entities.enterprises.list.actions.members",
         "icon": "Users",
         "variant": "ghost",
         "urlTemplate": "/enterprises/{id}/members",
-        "description": "Управління учасниками підприємства"
+        "description": "entities.enterprises.list.actions.membersDescription"
       },
       {
         "id": "delete",
         "type": "delete",
-        "label": "Видалити",
+        "label": "form.buttons.delete",
         "icon": "Trash2",
         "variant": "ghost",
         "confirmDialog": {
-          "title": "Видалити підприємство?",
-          "description": "Ви впевнені, що хочете видалити підприємство \"{name}\"? Цю дію не можна буде скасувати.",
-          "confirmText": "Видалити",
-          "cancelText": "Скасувати",
+          "title": "entities.enterprises.list.actions.confirmDeleteTitle",
+          "description": "entities.enterprises.list.actions.confirmDeleteDescription",
+          "confirmText": "form.buttons.delete",
+          "cancelText": "form.buttons.cancel",
           "variant": "destructive"
         },
         "showOnlyFor": {
@@ -177,7 +177,7 @@
     "rowClick": {
       "action": "navigate",
       "urlTemplate": "/{id}/workspace",
-      "description": "Перейти до робочого простору підприємства",
+      "description": "entities.enterprises.list.rowClick.description",
       "setCookie": {
         "name": "enterprise_id",
         "valueField": "id"
@@ -190,37 +190,37 @@
     "entityName": "Enterprise",
 
     "ui": {
-      "pageTitle": "Створити підприємство",
-      "pageDescription": "Створіть нове підприємство для управління проєктами та командою",
-      "submitButtonText": "Створити підприємство",
-      "cancelButtonText": "Скасувати",
-      "successMessage": "Підприємство успішно створено",
-      "errorMessage": "Помилка створення підприємства"
+      "pageTitle": "entities.enterprises.formCreate.pageTitle",
+      "pageDescription": "entities.enterprises.formCreate.pageDescription",
+      "submitButtonText": "entities.enterprises.formCreate.submitButtonText",
+      "cancelButtonText": "form.buttons.cancel",
+      "successMessage": "entities.enterprises.formCreate.successMessage",
+      "errorMessage": "entities.enterprises.formCreate.errorMessage"
     },
 
     "messages": {
-      "requiredField": "Це поле обов'язкове",
-      "invalidEmail": "Невірний формат email",
-      "minLength": "Мінімальна довжина {min} символів",
-      "maxLength": "Максимальна довжина {max} символів"
+      "requiredField": "entities.enterprises.formCreate.messages.requiredField",
+      "invalidEmail": "entities.enterprises.formCreate.messages.invalidEmail",
+      "minLength": "entities.enterprises.formCreate.messages.minLength",
+      "maxLength": "entities.enterprises.formCreate.messages.maxLength"
     },
 
     "sections": [
       {
         "id": 0,
-        "title": "Основна інформація",
-        "description": "Загальні дані про підприємство",
+        "title": "form.sections.basicInfo.title",
+        "description": "entities.enterprises.formCreate.sections.basicInfo.description",
         "controls": [
           {
             "id": "name",
             "name": "name",
-            "label": "Назва підприємства",
+            "label": "entities.enterprises.formCreate.fields.name.label",
             "type": "text",
             "dbType": "varchar",
             "required": true,
-            "requiredText": "Назва підприємства обов'язкова",
-            "placeholder": "Наприклад, ФОП Іванов",
-            "description": "Офіційна назва вашого підприємства",
+            "requiredText": "entities.enterprises.formCreate.fields.name.required",
+            "placeholder": "entities.enterprises.formCreate.fields.name.placeholder",
+            "description": "entities.enterprises.formCreate.fields.name.description",
             "minLength": 1,
             "maxLength": 255,
             "forCreatePage": true,
@@ -232,13 +232,13 @@
           {
             "id": "country_code",
             "name": "country_code",
-            "label": "Країна реєстрації",
+            "label": "entities.enterprises.formCreate.fields.country_code.label",
             "type": "select",
             "dbType": "varchar",
             "required": true,
-            "requiredText": "Оберіть країну реєстрації",
-            "placeholder": "Оберіть країну",
-            "description": "Країна, де зареєстроване підприємство (не можна змінити пізніше)",
+            "requiredText": "entities.enterprises.formCreate.fields.country_code.required",
+            "placeholder": "entities.enterprises.formCreate.fields.country_code.placeholder",
+            "description": "entities.enterprises.formCreate.fields.country_code.description",
             "loadOptions": true,
             "optionsSource": "countries",
             "forCreatePage": true,
@@ -251,19 +251,19 @@
       },
       {
         "id": 1,
-        "title": "Налаштування обліку",
-        "description": "Валюта та мова інтерфейсу",
+        "title": "form.sections.accountingSettings.title",
+        "description": "form.sections.accountingSettings.description",
         "controls": [
           {
             "id": "default_currency",
             "name": "default_currency",
-            "label": "Валюта обліку",
+            "label": "entities.enterprises.formCreate.fields.default_currency.label",
             "type": "select",
             "dbType": "varchar",
             "required": true,
-            "requiredText": "Оберіть валюту обліку",
-            "placeholder": "Оберіть валюту",
-            "description": "Основна валюта для фінансового обліку",
+            "requiredText": "entities.enterprises.formCreate.fields.default_currency.required",
+            "placeholder": "entities.enterprises.formCreate.fields.default_currency.placeholder",
+            "description": "entities.enterprises.formCreate.fields.default_currency.description",
             "loadOptions": true,
             "optionsSource": "currencies",
             "autoSelectFromCountry": true,
@@ -276,12 +276,12 @@
           {
             "id": "default_locale",
             "name": "default_locale",
-            "label": "Мова інтерфейсу",
+            "label": "entities.enterprises.formCreate.fields.default_locale.label",
             "type": "select",
             "dbType": "varchar",
             "required": false,
-            "placeholder": "Оберіть мову (опціонально)",
-            "description": "Мова за замовчуванням для інтерфейсу. Якщо не вказано, буде використано UK",
+            "placeholder": "entities.enterprises.formCreate.fields.default_locale.placeholder",
+            "description": "entities.enterprises.formCreate.fields.default_locale.description",
             "loadOptions": true,
             "optionsSource": "locales",
             "defaultStringValue": "uk",
@@ -303,35 +303,35 @@
     "entityName": "Enterprise",
 
     "ui": {
-      "pageTitle": "Редагувати підприємство",
-      "pageDescription": "Оновіть інформацію про підприємство",
-      "submitButtonText": "Зберегти зміни",
-      "cancelButtonText": "Скасувати",
-      "successMessage": "Підприємство успішно оновлено",
-      "errorMessage": "Помилка оновлення підприємства"
+      "pageTitle": "entities.enterprises.formEdit.pageTitle",
+      "pageDescription": "entities.enterprises.formEdit.pageDescription",
+      "submitButtonText": "form.buttons.saveChanges",
+      "cancelButtonText": "form.buttons.cancel",
+      "successMessage": "entities.enterprises.formEdit.successMessage",
+      "errorMessage": "entities.enterprises.formEdit.errorMessage"
     },
 
     "messages": {
-      "requiredField": "Це поле обов'язкове",
-      "invalidEmail": "Невірний формат email",
-      "minLength": "Мінімальна довжина {min} символів",
-      "maxLength": "Максимальна довжина {max} символів"
+      "requiredField": "entities.enterprises.formCreate.messages.requiredField",
+      "invalidEmail": "entities.enterprises.formCreate.messages.invalidEmail",
+      "minLength": "entities.enterprises.formCreate.messages.minLength",
+      "maxLength": "entities.enterprises.formCreate.messages.maxLength"
     },
 
     "sections": [
       {
         "id": 0,
-        "title": "Основна інформація",
-        "description": "Загальні дані про підприємство",
+        "title": "form.sections.basicInfo.title",
+        "description": "entities.enterprises.formEdit.sections.basicInfo.description",
         "controls": [
           {
             "id": "name",
             "name": "name",
-            "label": "Назва підприємства",
+            "label": "entities.enterprises.formEdit.fields.name.label",
             "type": "text",
             "dbType": "varchar",
             "required": true,
-            "requiredText": "Назва підприємства обов'язкова",
+            "requiredText": "entities.enterprises.formCreate.fields.name.required",
             "placeholder": "Наприклад, ФОП Іванов",
             "description": "Офіційна назва вашого підприємства",
             "minLength": 1,
@@ -345,13 +345,13 @@
           {
             "id": "country_code",
             "name": "country_code",
-            "label": "Країна реєстрації",
+            "label": "entities.enterprises.formEdit.fields.country_code.label",
             "type": "select",
             "dbType": "varchar",
             "required": true,
-            "requiredText": "Оберіть країну реєстрації",
-            "placeholder": "Оберіть країну",
-            "description": "Країна, де зареєстроване підприємство (не можна змінити)",
+            "requiredText": "entities.enterprises.formCreate.fields.country_code.required",
+            "placeholder": "entities.enterprises.formEdit.fields.country_code.placeholder",
+            "description": "entities.enterprises.formEdit.fields.country_code.description",
             "loadOptions": true,
             "optionsSource": "countries",
             "forCreatePage": true,
@@ -364,18 +364,18 @@
       },
       {
         "id": 1,
-        "title": "Налаштування обліку",
-        "description": "Валюта та мова інтерфейсу",
+        "title": "form.sections.accountingSettings.title",
+        "description": "form.sections.accountingSettings.description",
         "controls": [
           {
             "id": "default_currency",
             "name": "default_currency",
-            "label": "Валюта обліку",
+            "label": "entities.enterprises.formEdit.fields.default_currency.label",
             "type": "select",
             "dbType": "varchar",
             "required": true,
-            "requiredText": "Оберіть валюту обліку",
-            "placeholder": "Оберіть валюту",
+            "requiredText": "entities.enterprises.formCreate.fields.default_currency.required",
+            "placeholder": "entities.enterprises.formEdit.fields.default_currency.placeholder",
             "description": "Основна валюта для фінансового обліку",
             "loadOptions": true,
             "optionsSource": "currencies",
@@ -388,12 +388,12 @@
           {
             "id": "default_locale",
             "name": "default_locale",
-            "label": "Мова інтерфейсу",
+            "label": "entities.enterprises.formEdit.fields.default_locale.label",
             "type": "select",
             "dbType": "varchar",
             "required": false,
-            "placeholder": "Оберіть мову (опціонально)",
-            "description": "Мова за замовчуванням для інтерфейсу",
+            "placeholder": "entities.enterprises.formEdit.fields.default_locale.placeholder",
+            "description": "entities.enterprises.formEdit.fields.default_locale.description",
             "loadOptions": true,
             "optionsSource": "locales",
             "forCreatePage": true,
@@ -417,9 +417,9 @@
         "minLength": 1,
         "maxLength": 255,
         "errorMessages": {
-          "required": "Назва підприємства обов'язкова",
-          "minLength": "Назва повинна містити хоча б 1 символ",
-          "maxLength": "Назва не може бути довшою за 255 символів"
+          "required": "entities.enterprises.formCreate.fields.name.required",
+          "minLength": "entities.enterprises.formCreate.fields.name.minLength",
+          "maxLength": "entities.enterprises.formCreate.fields.name.maxLength"
         }
       },
       "country_code": {
@@ -427,8 +427,8 @@
         "type": "string",
         "pattern": "^[A-Z]{2}$",
         "errorMessages": {
-          "required": "Оберіть країну реєстрації",
-          "pattern": "Невірний код країни"
+          "required": "entities.enterprises.formCreate.fields.country_code.required",
+          "pattern": "entities.enterprises.formCreate.fields.country_code.pattern"
         }
       },
       "default_currency": {
@@ -436,8 +436,8 @@
         "type": "string",
         "pattern": "^[A-Z]{3}$",
         "errorMessages": {
-          "required": "Оберіть валюту обліку",
-          "pattern": "Невірний код валюти"
+          "required": "entities.enterprises.formCreate.fields.default_currency.required",
+          "pattern": "entities.enterprises.formCreate.fields.default_currency.pattern"
         }
       },
       "default_locale": {
@@ -445,7 +445,7 @@
         "type": "string",
         "pattern": "^[a-z]{2}$",
         "errorMessages": {
-          "pattern": "Невірний код мови"
+          "pattern": "entities.enterprises.formCreate.fields.default_locale.pattern"
         }
       }
     }
@@ -459,9 +459,9 @@
         "minLength": 1,
         "maxLength": 255,
         "errorMessages": {
-          "required": "Назва підприємства обов'язкова",
-          "minLength": "Назва повинна містити хоча б 1 символ",
-          "maxLength": "Назва не може бути довшою за 255 символів"
+          "required": "entities.enterprises.formCreate.fields.name.required",
+          "minLength": "entities.enterprises.formCreate.fields.name.minLength",
+          "maxLength": "entities.enterprises.formCreate.fields.name.maxLength"
         }
       },
       "default_currency": {
@@ -469,8 +469,8 @@
         "type": "string",
         "pattern": "^[A-Z]{3}$",
         "errorMessages": {
-          "required": "Оберіть валюту обліку",
-          "pattern": "Невірний код валюти"
+          "required": "entities.enterprises.formCreate.fields.default_currency.required",
+          "pattern": "entities.enterprises.formCreate.fields.default_currency.pattern"
         }
       },
       "default_locale": {
@@ -478,7 +478,7 @@
         "type": "string",
         "pattern": "^[a-z]{2}$",
         "errorMessages": {
-          "pattern": "Невірний код мови"
+          "pattern": "entities.enterprises.formCreate.fields.default_locale.pattern"
         }
       }
     }

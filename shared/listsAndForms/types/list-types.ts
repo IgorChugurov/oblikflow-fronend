@@ -146,6 +146,9 @@ export interface ColumnConfig {
   
   // For links
   onClick?: (row: any) => void;
+  urlTemplate?: string;            // "/entities/{id}/edit" - template with placeholders
+  external?: boolean;              // Navigate to external domain
+  externalBaseUrl?: 'WORKSPACE' | 'ADMIN' | 'PLATFORM' | 'SITE'; // Which external app to navigate to
   
   description?: string;
 }

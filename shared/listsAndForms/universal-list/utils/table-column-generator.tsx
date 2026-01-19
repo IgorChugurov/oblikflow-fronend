@@ -30,7 +30,8 @@ export function generateColumnsFromConfig<TData extends { id: string }>(
   actions: ActionConfig[] = [],
   onNavigate: (url: string, row: TData) => void,
   onDelete: (id: string) => void,
-  readOnly: boolean = false
+  readOnly: boolean = false,
+  t?: (key: string) => string
 ): ColumnDef<TData>[] {
   // Filter only visible columns
   const visibleColumns = columnsConfig
@@ -45,7 +46,7 @@ export function generateColumnsFromConfig<TData extends { id: string }>(
   // Generate actions column (if not readOnly and has actions)
   const actionsColumn: ColumnDef<TData> | null =
     !readOnly && actions.length > 0
-      ? generateActionsColumn(actions, onNavigate, onDelete)
+      ? generateActionsColumn(actions, onNavigate, onDelete, t)
       : null;
 
   return actionsColumn ? [...dataColumns, actionsColumn] : dataColumns;
@@ -103,11 +104,15 @@ function generateColumnFromConfig<TData extends { id: string }>(
 function generateActionsColumn<TData extends { id: string }>(
   actions: ActionConfig[],
   onNavigate: (url: string, row: TData) => void,
-  onDelete: (id: string) => void
+  onDelete: (id: string) => void,
+  t?: (key: string) => string
 ): ColumnDef<TData> {
+  const actionsLabel = t ? t('list.columns.actions') : 'Actions';
+  const openMenuLabel = t ? t('list.openMenu') : 'Open menu';
+  
   return {
     id: 'actions',
-    header: () => <div className="text-right">Дії</div>,
+    header: () => <div className="text-right">{actionsLabel}</div>,
     cell: ({ row }) => {
       const rowData = row.original;
       
@@ -129,12 +134,12 @@ function generateActionsColumn<TData extends { id: string }>(
             <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
               <Button variant="ghost" size="icon" className="h-8 w-8">
                 <MoreHorizontal className="h-4 w-4" />
-                <span className="sr-only">Відкрити меню</span>
+                <span className="sr-only">{openMenuLabel}</span>
               </Button>
             </DropdownMenuTrigger>
             
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Дії</DropdownMenuLabel>
+              <DropdownMenuLabel>{actionsLabel}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               
               {visibleActions.map((action, index) => {

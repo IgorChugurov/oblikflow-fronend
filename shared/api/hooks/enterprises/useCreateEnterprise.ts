@@ -37,12 +37,13 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { enterprisesSDK } from '../../sdk';
+import { updateListCache } from '../../../lib/api/core/cache-manager';
 import type { 
   CreateEnterpriseDto,
   CreateEnterpriseResponse,
 } from '../../../types/enterprises';
 
-export function useCreateEnterprise() {
+export function useCreateEnterprise(projectId = 'admin') {
   const queryClient = useQueryClient();
   
   return useMutation<CreateEnterpriseResponse, Error, CreateEnterpriseDto>({
@@ -56,9 +57,14 @@ export function useCreateEnterprise() {
       return result.data!;
     },
     
-    onSuccess: () => {
-      // Инвалидировать список предприятий после создания
-      queryClient.invalidateQueries({ queryKey: ['enterprises'] });
+    onSuccess: async () => {
+      // Обновляем списки предприятий (safe-refetch стратегия)
+      // Сохраняет позицию пользователя (page, search, filters)
+      await updateListCache({
+        queryClient,
+        projectId,
+        serviceType: 'enterprises',
+      });
     },
   });
 }

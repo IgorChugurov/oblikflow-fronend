@@ -69,9 +69,12 @@ export function useAddMember(enterpriseId: string) {
       return result.data!;
     },
 
-    onSuccess: () => {
-      // Инвалидировать список участников после добавления
-      queryClient.invalidateQueries({ queryKey: ["members", enterpriseId] });
+    onSuccess: async () => {
+      // Обновляем список участников (safe-refetch стратегия)
+      await queryClient.refetchQueries({ 
+        queryKey: ["members", enterpriseId],
+        type: 'active'
+      });
     },
   });
 }

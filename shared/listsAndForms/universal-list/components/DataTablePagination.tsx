@@ -4,7 +4,10 @@
  * Показывает текущую страницу, кнопки навигации, выбор pageSize.
  */
 
+'use client';
+
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { Button } from 'shared/components/ui/button';
 import {
@@ -40,6 +43,8 @@ export function DataTablePagination({
   onPageSizeChange,
   disabled = false,
 }: DataTablePaginationProps) {
+  const t = useTranslations();
+  
   // Calculate range of items shown
   const start = (page - 1) * pageSize + 1;
   const end = Math.min(page * pageSize, total);
@@ -48,7 +53,7 @@ export function DataTablePagination({
     <div className="flex items-center justify-between px-4 py-4 border-t">
       {/* Left: Items per page selector */}
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <span>Записів на сторінці:</span>
+        <span>{t('pagination.rowsPerPage')}</span>
         <Select
           value={String(pageSize)}
           onValueChange={(value) => onPageSizeChange(Number(value))}
@@ -74,11 +79,11 @@ export function DataTablePagination({
             <span className="font-medium text-foreground">{start}</span>
             <span>–</span>
             <span className="font-medium text-foreground">{end}</span>
-            <span>з</span>
+            <span>{t('pagination.of')}</span>
             <span className="font-medium text-foreground">{total}</span>
           </>
         ) : (
-          <span>Немає записів</span>
+          <span>{t('pagination.noRecords')}</span>
         )}
       </div>
 
@@ -90,7 +95,7 @@ export function DataTablePagination({
           className="h-8 w-8"
           onClick={() => onPageChange(1)}
           disabled={!hasPreviousPage || disabled}
-          aria-label="Перша сторінка"
+          aria-label={t('pagination.firstPage')}
         >
           <ChevronsLeft className="h-4 w-4" />
         </Button>
@@ -101,7 +106,7 @@ export function DataTablePagination({
           className="h-8 w-8"
           onClick={() => onPageChange(page - 1)}
           disabled={!hasPreviousPage || disabled}
-          aria-label="Попередня сторінка"
+          aria-label={t('pagination.previousPage')}
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
@@ -118,7 +123,7 @@ export function DataTablePagination({
           className="h-8 w-8"
           onClick={() => onPageChange(page + 1)}
           disabled={!hasNextPage || disabled}
-          aria-label="Наступна сторінка"
+          aria-label={t('pagination.nextPage')}
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
@@ -129,7 +134,7 @@ export function DataTablePagination({
           className="h-8 w-8"
           onClick={() => onPageChange(totalPages)}
           disabled={!hasNextPage || disabled}
-          aria-label="Остання сторінка"
+          aria-label={t('pagination.lastPage')}
         >
           <ChevronsRight className="h-4 w-4" />
         </Button>

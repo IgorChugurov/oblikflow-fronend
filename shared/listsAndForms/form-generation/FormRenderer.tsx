@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { Loader2 } from 'lucide-react';
 import { Button } from 'shared/components/ui/button';
 import { Form } from 'shared/components/ui/form';
@@ -58,9 +59,11 @@ export function FormRenderer<TData = any>({
   pageTitle,
   pageDescription,
   submitButtonText,
-  cancelButtonText = 'Скасувати',
-  deleteButtonText = 'Видалити',
+  cancelButtonText,
+  deleteButtonText,
 }: FormRendererProps<TData>) {
+  const t = useTranslations();
+  
   // Собираем все поля из всех секций
   const allFields = sections.flatMap(section => section.controls);
   
@@ -91,9 +94,11 @@ export function FormRenderer<TData = any>({
     }
   });
   
-  // Определяем текст кнопки submit
-  const defaultSubmitText = mode === 'create' ? 'Створити' : 'Зберегти';
+  // Определяем текст кнопок
+  const defaultSubmitText = mode === 'create' ? t('form.create') : t('form.save');
   const finalSubmitText = submitButtonText || defaultSubmitText;
+  const finalCancelText = cancelButtonText || t('form.buttons.cancel');
+  const finalDeleteText = deleteButtonText || t('form.buttons.delete');
   
   return (
     <Card className="w-full h-full overflow-hidden flex flex-col border-border">
@@ -107,27 +112,27 @@ export function FormRenderer<TData = any>({
                 type="button"
                 variant="destructive"
                 onClick={onDelete}
-                disabled={isLoading}
-              >
-                {deleteButtonText}
-              </Button>
-            )}
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onCancel}
               disabled={isLoading}
             >
-              {cancelButtonText}
+              {finalDeleteText}
             </Button>
-            <Button
-              type="submit"
-              form="universal-form"
-              disabled={isLoading}
-            >
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isLoading ? 'Збереження...' : finalSubmitText}
-            </Button>
+          )}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={isLoading}
+          >
+            {finalCancelText}
+          </Button>
+          <Button
+            type="submit"
+            form="universal-form"
+            disabled={isLoading}
+          >
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isLoading ? t('form.saving') : finalSubmitText}
+          </Button>
           </div>
         </div>
       </CardHeader>
@@ -138,7 +143,7 @@ export function FormRenderer<TData = any>({
           <form id="universal-form" onSubmit={handleSubmit} className="space-y-8" noValidate>
             {sections.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
-                <p>Немає доступних полів для {mode === 'create' ? 'створення' : 'редагування'}.</p>
+                <p>{t('form.noFields')}</p>
               </div>
             ) : (
               sections.map((section, sectionIdx) => (

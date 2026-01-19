@@ -148,7 +148,63 @@
     "settings": "Налаштування",
     "logout": "Вийти",
     "profile": "Профіль",
-    "language": "Мова"
+    "language": "Мова",
+    "noOptions": "Немає опцій",
+    "thisRecord": "цей запис",
+    "deleteError": "Помилка видалення"
+  },
+  "list": {
+    "search": "Пошук...",
+    "filters": "Фільтри",
+    "noResults": "Нічого не знайдено",
+    "actions": "Дії",
+    "openMenu": "Відкрити меню",
+    "columns": {
+      "actions": "Дії"
+    }
+  },
+  "form": {
+    "create": "Створити",
+    "save": "Зберегти",
+    "cancel": "Скасувати",
+    "delete": "Видалити",
+    "saving": "Збереження...",
+    "loading": "Завантаження...",
+    "noFields": "Немає доступних полів",
+    "selectValue": "Оберіть значення",
+    "buttons": {
+      "submit": "Відправити",
+      "cancel": "Скасувати",
+      "save": "Зберегти",
+      "saveChanges": "Зберегти зміни",
+      "create": "Створити",
+      "delete": "Видалити",
+      "edit": "Редагувати",
+      "close": "Закрити",
+      "back": "Назад"
+    },
+    "sections": {
+      "basicInfo": {
+        "title": "Основна інформація",
+        "description": "Загальні дані"
+      },
+      "accountingSettings": {
+        "title": "Налаштування обліку",
+        "description": "Валюта та мова інтерфейсу"
+      }
+    }
+  },
+  "pagination": {
+    "rowsPerPage": "Записів на сторінці:",
+    "of": "з",
+    "noRecords": "Немає записів",
+    "record": "запис",
+    "records": "записів",
+    "page": "Сторінка",
+    "firstPage": "Перша сторінка",
+    "previousPage": "Попередня сторінка",
+    "nextPage": "Наступна сторінка",
+    "lastPage": "Остання сторінка"
   },
   "errors": {
     "generic": "Щось пішло не так",
@@ -158,5 +214,181 @@
     "serverError": "Помилка сервера",
     "networkError": "Помилка мережі",
     "tryAgain": "Спробуйте ще раз"
+  },
+  "entities": {
+    "enterprises": {
+      "list": {
+        "pageTitle": "Мої підприємства",
+        "description": "Керування підприємствами та доступом до них",
+        "searchPlaceholder": "Пошук підприємств за назвою...",
+        "emptyStateTitle": "Немає підприємств",
+        "emptyStateMessage1": "Створіть своє перше підприємство, щоб почати роботу",
+        "emptyStateMessage2": "Підприємство - це організація, яка об'єднує проєкти та команду",
+        "createButtonText": "Створити підприємство",
+        "columns": {
+          "name": {
+            "label": "Назва",
+            "description": "Назва підприємства"
+          },
+          "country_code": {
+            "label": "Країна",
+            "description": "Код країни реєстрації"
+          },
+          "default_currency": {
+            "label": "Валюта",
+            "description": "Валюта обліку"
+          },
+          "status": {
+            "label": "Статус",
+            "description": "Статус підприємства",
+            "active": "Активне",
+            "inactive": "Неактивне",
+            "suspended": "Призупинено"
+          },
+          "is_owner": {
+            "label": "Роль",
+            "description": "Ваша роль в підприємстві",
+            "owner": "Власник",
+            "admin": "Адміністратор"
+          },
+          "created_at": {
+            "label": "Створено",
+            "description": "Дата створення"
+          }
+        },
+        "filters": {
+          "status": {
+            "label": "Статус",
+            "active": "Активні",
+            "inactive": "Неактивні",
+            "suspended": "Призупинені"
+          },
+          "role": {
+            "label": "Роль",
+            "owner": "Власник",
+            "admin": "Адміністратор"
+          }
+        },
+        "actions": {
+          "edit": "Редагувати",
+          "members": "Учасники",
+          "membersDescription": "Управління учасниками підприємства",
+          "delete": "Видалити",
+          "confirmDeleteTitle": "Видалити підприємство?",
+          "confirmDeleteDescription": "Ви впевнені, що хочете видалити підприємство \"{name}\"? Цю дію не можна буде скасувати.",
+          "confirmDeleteButton": "Видалити",
+          "cancelDeleteButton": "Скасувати"
+        },
+        "rowClick": {
+          "description": "Перейти до робочого простору підприємства"
+        }
+      },
+      "formCreate": {
+        "pageTitle": "Створити підприємство",
+        "pageDescription": "Створіть нове підприємство для управління проєктами та командою",
+        "submitButtonText": "Створити підприємство",
+        "cancelButtonText": "Скасувати",
+        "successMessage": "Підприємство успішно створено",
+        "errorMessage": "Помилка створення підприємства",
+        "sections": {
+          "basicInfo": {
+            "title": "Основна інформація",
+            "description": "Загальні дані про підприємство"
+          },
+          "accountingSettings": {
+            "title": "Налаштування обліку",
+            "description": "Валюта та мова інтерфейсу"
+          }
+        },
+        "fields": {
+          "name": {
+            "label": "Назва підприємства",
+            "placeholder": "Наприклад, ФОП Іванов",
+            "description": "Офіційна назва вашого підприємства",
+            "required": "Назва підприємства обов'язкова",
+            "minLength": "Назва повинна містити хоча б 1 символ",
+            "maxLength": "Назва не може бути довшою за 255 символів"
+          },
+          "country_code": {
+            "label": "Країна реєстрації",
+            "placeholder": "Оберіть країну",
+            "description": "Країна, де зареєстроване підприємство (не можна змінити пізніше)",
+            "required": "Оберіть країну реєстрації",
+            "pattern": "Невірний код країни"
+          },
+          "default_currency": {
+            "label": "Валюта обліку",
+            "placeholder": "Оберіть валюту",
+            "description": "Основна валюта для фінансового обліку",
+            "required": "Оберіть валюту обліку",
+            "pattern": "Невірний код валюти"
+          },
+          "default_locale": {
+            "label": "Мова інтерфейсу",
+            "placeholder": "Оберіть мову (опціонально)",
+            "description": "Мова за замовчуванням для інтерфейсу. Якщо не вказано, буде використано UK",
+            "pattern": "Невірний код мови"
+          }
+        },
+        "messages": {
+          "requiredField": "Це поле обов'язкове",
+          "invalidEmail": "Невірний формат email",
+          "minLength": "Мінімальна довжина {min} символів",
+          "maxLength": "Максимальна довжина {max} символів"
+        }
+      },
+      "formEdit": {
+        "pageTitle": "Редагувати підприємство",
+        "pageDescription": "Оновіть інформацію про підприємство",
+        "submitButtonText": "Зберегти зміни",
+        "cancelButtonText": "Скасувати",
+        "successMessage": "Підприємство успішно оновлено",
+        "errorMessage": "Помилка оновлення підприємства",
+        "sections": {
+          "basicInfo": {
+            "title": "Основна інформація",
+            "description": "Загальні дані про підприємство"
+          },
+          "accountingSettings": {
+            "title": "Налаштування обліку",
+            "description": "Валюта та мова інтерфейсу"
+          }
+        },
+        "fields": {
+          "name": {
+            "label": "Назва підприємства",
+            "placeholder": "Наприклад, ФОП Іванов",
+            "description": "Офіційна назва вашого підприємства"
+          },
+          "country_code": {
+            "label": "Країна реєстрації",
+            "placeholder": "Оберіть країну",
+            "description": "Країна, де зареєстроване підприємство (не можна змінити)"
+          },
+          "default_currency": {
+            "label": "Валюта обліку",
+            "placeholder": "Оберіть валюту",
+            "description": "Основна валюта для фінансового обліку"
+          },
+          "default_locale": {
+            "label": "Мова інтерфейсу",
+            "placeholder": "Оберіть мову (опціонально)",
+            "description": "Мова за замовчуванням для інтерфейсу"
+          }
+        }
+      },
+      "notFound": "Підприємство не знайдено",
+      "notFoundDescription": "Можливо, воно було видалено або у вас немає доступу",
+      "backToList": "Повернутися до списку",
+      "suspendButton": "Призупинити",
+      "toast": {
+        "createdDescription": "Підприємство успішно додано до списку",
+        "updatedDescription": "Зміни успішно збережено",
+        "suspended": "Підприємство призупинено",
+        "suspendedDescription": "Статус підприємства змінено на \"призупинено\"",
+        "suspendError": "Не вдалося призупинити підприємство",
+        "saveError": "Не вдалося зберегти зміни"
+      }
+    }
   }
 }

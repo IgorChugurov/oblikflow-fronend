@@ -2,6 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
+import { useTranslations } from 'next-intl';
 import {
   Select,
   SelectContent,
@@ -34,6 +35,8 @@ interface SelectFieldProps {
  * - Автоматический выбор валюты по стране (autoSelectFromCountry)
  */
 export function SelectField({ field, form, disabled }: SelectFieldProps) {
+  const t = useTranslations();
+  
   // Загружаем опции из справочника
   const {
     localeOptions,
@@ -99,14 +102,14 @@ export function SelectField({ field, form, disabled }: SelectFieldProps) {
           >
             <FormControl>
               <SelectTrigger>
-                <SelectValue placeholder={field.placeholder || 'Оберіть значення'} />
+                <SelectValue placeholder={field.placeholder || t('form.selectValue')} />
               </SelectTrigger>
             </FormControl>
             <SelectContent>
               {isLoading ? (
-                <SelectItem value="loading" disabled>Завантаження...</SelectItem>
+                <SelectItem value="loading" disabled>{t('form.loading')}</SelectItem>
               ) : options.length === 0 ? (
-                <SelectItem value="empty" disabled>Немає опцій</SelectItem>
+                <SelectItem value="empty" disabled>{t('common.noOptions')}</SelectItem>
               ) : (
                 options.map((option) => (
                   <SelectItem key={option.value} value={option.value}>

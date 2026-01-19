@@ -6,6 +6,7 @@
  */
 
 import { useQuery } from '@tanstack/react-query';
+import { listKeys } from '../../../lib/api/core/query-keys';
 import type { LoadDataParams, LoadDataFn, LoadDataResult } from '../../types';
 
 interface UseListQueryOptions<TData> {
@@ -22,7 +23,7 @@ export function useListQuery<TData extends { id: string }>({
   onLoadData,
 }: UseListQueryOptions<TData>) {
   const query = useQuery<LoadDataResult<TData>, Error>({
-    queryKey: ['list', projectId, serviceType, params],
+    queryKey: listKeys.page(projectId, serviceType, params),
     queryFn: () => onLoadData(params),
     staleTime: 30 * 1000, // 30 seconds
     retry: 1,

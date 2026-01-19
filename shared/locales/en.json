@@ -148,7 +148,63 @@
     "settings": "Settings",
     "logout": "Sign Out",
     "profile": "Profile",
-    "language": "Language"
+    "language": "Language",
+    "noOptions": "No options",
+    "thisRecord": "this record",
+    "deleteError": "Delete error"
+  },
+  "list": {
+    "search": "Search...",
+    "filters": "Filters",
+    "noResults": "No results found",
+    "actions": "Actions",
+    "openMenu": "Open menu",
+    "columns": {
+      "actions": "Actions"
+    }
+  },
+  "form": {
+    "create": "Create",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "saving": "Saving...",
+    "loading": "Loading...",
+    "noFields": "No fields available",
+    "selectValue": "Select value",
+    "buttons": {
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saveChanges": "Save Changes",
+      "create": "Create",
+      "delete": "Delete",
+      "edit": "Edit",
+      "close": "Close",
+      "back": "Back"
+    },
+    "sections": {
+      "basicInfo": {
+        "title": "Basic Information",
+        "description": "General information"
+      },
+      "accountingSettings": {
+        "title": "Accounting Settings",
+        "description": "Currency and interface language"
+      }
+    }
+  },
+  "pagination": {
+    "rowsPerPage": "Rows per page:",
+    "of": "of",
+    "noRecords": "No records",
+    "record": "record",
+    "records": "records",
+    "page": "Page",
+    "firstPage": "First page",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "lastPage": "Last page"
   },
   "errors": {
     "generic": "Something went wrong",
@@ -158,5 +214,181 @@
     "serverError": "Server error",
     "networkError": "Network error",
     "tryAgain": "Try again"
+  },
+  "entities": {
+    "enterprises": {
+      "list": {
+        "pageTitle": "My Enterprises",
+        "description": "Manage enterprises and access to them",
+        "searchPlaceholder": "Search enterprises by name...",
+        "emptyStateTitle": "No enterprises",
+        "emptyStateMessage1": "Create your first enterprise to get started",
+        "emptyStateMessage2": "An enterprise is an organization that brings together projects and team",
+        "createButtonText": "Create Enterprise",
+        "columns": {
+          "name": {
+            "label": "Name",
+            "description": "Enterprise name"
+          },
+          "country_code": {
+            "label": "Country",
+            "description": "Country code"
+          },
+          "default_currency": {
+            "label": "Currency",
+            "description": "Accounting currency"
+          },
+          "status": {
+            "label": "Status",
+            "description": "Enterprise status",
+            "active": "Active",
+            "inactive": "Inactive",
+            "suspended": "Suspended"
+          },
+          "is_owner": {
+            "label": "Role",
+            "description": "Your role in the enterprise",
+            "owner": "Owner",
+            "admin": "Administrator"
+          },
+          "created_at": {
+            "label": "Created",
+            "description": "Creation date"
+          }
+        },
+        "filters": {
+          "status": {
+            "label": "Status",
+            "active": "Active",
+            "inactive": "Inactive",
+            "suspended": "Suspended"
+          },
+          "role": {
+            "label": "Role",
+            "owner": "Owner",
+            "admin": "Administrator"
+          }
+        },
+        "actions": {
+          "edit": "Edit",
+          "members": "Members",
+          "membersDescription": "Manage enterprise members",
+          "delete": "Delete",
+          "confirmDeleteTitle": "Delete enterprise?",
+          "confirmDeleteDescription": "Are you sure you want to delete enterprise \"{name}\"? This action cannot be undone.",
+          "confirmDeleteButton": "Delete",
+          "cancelDeleteButton": "Cancel"
+        },
+        "rowClick": {
+          "description": "Go to enterprise workspace"
+        }
+      },
+      "formCreate": {
+        "pageTitle": "Create Enterprise",
+        "pageDescription": "Create a new enterprise to manage projects and team",
+        "submitButtonText": "Create Enterprise",
+        "cancelButtonText": "Cancel",
+        "successMessage": "Enterprise created successfully",
+        "errorMessage": "Failed to create enterprise",
+        "sections": {
+          "basicInfo": {
+            "title": "Basic Information",
+            "description": "General information about the enterprise"
+          },
+          "accountingSettings": {
+            "title": "Accounting Settings",
+            "description": "Currency and interface language"
+          }
+        },
+        "fields": {
+          "name": {
+            "label": "Enterprise Name",
+            "placeholder": "e.g., ABC Corporation",
+            "description": "Official name of your enterprise",
+            "required": "Enterprise name is required",
+            "minLength": "Name must contain at least 1 character",
+            "maxLength": "Name cannot be longer than 255 characters"
+          },
+          "country_code": {
+            "label": "Country of Registration",
+            "placeholder": "Select country",
+            "description": "Country where the enterprise is registered (cannot be changed later)",
+            "required": "Select country of registration",
+            "pattern": "Invalid country code"
+          },
+          "default_currency": {
+            "label": "Accounting Currency",
+            "placeholder": "Select currency",
+            "description": "Main currency for financial accounting",
+            "required": "Select accounting currency",
+            "pattern": "Invalid currency code"
+          },
+          "default_locale": {
+            "label": "Interface Language",
+            "placeholder": "Select language (optional)",
+            "description": "Default language for the interface. If not specified, UK will be used",
+            "pattern": "Invalid language code"
+          }
+        },
+        "messages": {
+          "requiredField": "This field is required",
+          "invalidEmail": "Invalid email format",
+          "minLength": "Minimum length {min} characters",
+          "maxLength": "Maximum length {max} characters"
+        }
+      },
+      "formEdit": {
+        "pageTitle": "Edit Enterprise",
+        "pageDescription": "Update enterprise information",
+        "submitButtonText": "Save Changes",
+        "cancelButtonText": "Cancel",
+        "successMessage": "Enterprise updated successfully",
+        "errorMessage": "Failed to update enterprise",
+        "sections": {
+          "basicInfo": {
+            "title": "Basic Information",
+            "description": "General information about the enterprise"
+          },
+          "accountingSettings": {
+            "title": "Accounting Settings",
+            "description": "Currency and interface language"
+          }
+        },
+        "fields": {
+          "name": {
+            "label": "Enterprise Name",
+            "placeholder": "e.g., ABC Corporation",
+            "description": "Official name of your enterprise"
+          },
+          "country_code": {
+            "label": "Country of Registration",
+            "placeholder": "Select country",
+            "description": "Country where the enterprise is registered (cannot be changed)"
+          },
+          "default_currency": {
+            "label": "Accounting Currency",
+            "placeholder": "Select currency",
+            "description": "Main currency for financial accounting"
+          },
+          "default_locale": {
+            "label": "Interface Language",
+            "placeholder": "Select language (optional)",
+            "description": "Default language for the interface"
+          }
+        }
+      },
+      "notFound": "Enterprise not found",
+      "notFoundDescription": "It may have been deleted or you don't have access",
+      "backToList": "Back to list",
+      "suspendButton": "Suspend",
+      "toast": {
+        "createdDescription": "Enterprise successfully added to the list",
+        "updatedDescription": "Changes saved successfully",
+        "suspended": "Enterprise suspended",
+        "suspendedDescription": "Enterprise status changed to \"suspended\"",
+        "suspendError": "Failed to suspend enterprise",
+        "saveError": "Failed to save changes"
+      }
+    }
   }
 }

@@ -4,7 +4,10 @@
  * Показывает название страницы, описание и статистику.
  */
 
+'use client';
+
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { CardHeader, CardTitle, CardDescription } from 'shared/components/ui/card';
 
 interface DataTableHeaderProps {
@@ -23,6 +26,8 @@ export function DataTableHeader({
   description,
   statistics,
 }: DataTableHeaderProps) {
+  const t = useTranslations();
+  
   return (
     <CardHeader>
       <div className="flex items-start justify-between">
@@ -36,13 +41,13 @@ export function DataTableHeader({
         {statistics && statistics.total > 0 && (
           <div className="text-sm text-muted-foreground">
             <span className="font-medium">{statistics.total}</span>{' '}
-            {statistics.total === 1 ? 'запис' : 'записів'}
+            {statistics.total === 1 ? t('pagination.record') : t('pagination.records')}
             {statistics.totalPages > 1 && (
               <>
                 {' '}
-                • Сторінка{' '}
+                • {t('pagination.page')}{' '}
                 <span className="font-medium">{statistics.currentPage}</span>
-                {' з '}
+                {' '}{t('pagination.of')}{' '}
                 <span className="font-medium">{statistics.totalPages}</span>
               </>
             )}

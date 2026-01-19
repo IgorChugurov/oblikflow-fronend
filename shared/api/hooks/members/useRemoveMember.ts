@@ -62,9 +62,12 @@ export function useRemoveMember(enterpriseId: string) {
       }
     },
 
-    onSuccess: () => {
-      // Инвалидировать список участников после удаления
-      queryClient.invalidateQueries({ queryKey: ["members", enterpriseId] });
+    onSuccess: async () => {
+      // Обновляем список участников (safe-refetch стратегия)
+      await queryClient.refetchQueries({ 
+        queryKey: ["members", enterpriseId],
+        type: 'active'
+      });
     },
   });
 }

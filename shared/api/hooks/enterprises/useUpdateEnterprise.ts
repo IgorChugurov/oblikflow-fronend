@@ -38,12 +38,14 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { enterprisesSDK } from '../../sdk';
+import { updateListCache, updateDetailCache } from '../../../lib/api/core/cache-manager';
+import { detailKeys } from '../../../lib/api/core/query-keys';
 import type { 
   UpdateEnterpriseDto,
   UpdateEnterpriseResponse,
 } from '../../../types/enterprises';
 
-export function useUpdateEnterprise(enterpriseId: string) {
+export function useUpdateEnterprise(enterpriseId: string, projectId = 'admin') {
   const queryClient = useQueryClient();
   
   return useMutation<UpdateEnterpriseResponse, Error, UpdateEnterpriseDto>({
@@ -57,10 +59,21 @@ export function useUpdateEnterprise(enterpriseId: string) {
       return result.data!;
     },
     
-    onSuccess: () => {
-      // Инвалидировать список И конкретное предприятие
-      queryClient.invalidateQueries({ queryKey: ['enterprises'] });
-      queryClient.invalidateQueries({ queryKey: ['enterprise', enterpriseId] });
+    onSuccess: async (response) => {
+      // Обновляем кэш деталей предприятия
+      updateDetailCache({
+        queryClient,
+        detailKey: detailKeys.enterprise(enterpriseId),
+        data: response,
+      });
+      
+      // Обновляем списки предприятий (safe-refetch стратегия)
+      // Сохраняет позицию пользователя (page, search, filters)
+      await updateListCache({
+        queryClient,
+        projectId,
+        serviceType: 'enterprises',
+      });
     },
   });
 }

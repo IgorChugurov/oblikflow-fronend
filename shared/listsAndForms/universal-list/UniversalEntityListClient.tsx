@@ -14,8 +14,11 @@
 import React, { useState, useCallback } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { UniversalEntityListDataTable } from './UniversalEntityListDataTable';
 import { generateColumnsFromConfig } from './utils/table-column-generator';
+import { updateListCache } from '../../lib/api/core/cache-manager';
+import { listKeys } from '../../lib/api/core/query-keys';
 import type { ListSpec, ServiceType, RoutingConfig, LoadDataFn, LoadDataResult } from '../types';
 import {
   Dialog,
@@ -48,6 +51,7 @@ export function UniversalEntityListClient<TData extends { id: string }>({
 }: UniversalEntityListClientProps<TData>) {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const t = useTranslations();
 
   // ========================================
   // Delete Dialog State
@@ -68,7 +72,7 @@ export function UniversalEntityListClient<TData extends { id: string }>({
   const getItemName = useCallback(
     (id: string): string => {
       const queries = queryClient.getQueriesData<LoadDataResult<TData>>({
-        queryKey: ['list', projectId, serviceType],
+        queryKey: listKeys.all(projectId, serviceType),
       });
 
       for (const [, queryData] of queries) {
@@ -86,9 +90,9 @@ export function UniversalEntityListClient<TData extends { id: string }>({
         }
       }
 
-      return 'цей запис';
+      return t('common.thisRecord');
     },
-    [queryClient, projectId, serviceType]
+    [queryClient, projectId, serviceType, t]
   );
 
   // ========================================
@@ -100,18 +104,20 @@ export function UniversalEntityListClient<TData extends { id: string }>({
       return { id, serviceType };
     },
     
-    // Optimistic update
+    // Optimistic update - удаляем из кэша сразу
     onMutate: async (id) => {
+      const baseQueryKey = listKeys.all(projectId, serviceType);
+      
       await queryClient.cancelQueries({
-        queryKey: ['list', projectId, serviceType],
+        queryKey: baseQueryKey,
       });
 
       const previousQueries = queryClient.getQueriesData({
-        queryKey: ['list', projectId, serviceType],
+        queryKey: baseQueryKey,
       });
 
       queryClient.setQueriesData<LoadDataResult<TData>>(
-        { queryKey: ['list', projectId, serviceType] },
+        { queryKey: baseQueryKey },
         (old) => {
           if (!old) return old;
           return {
@@ -135,13 +141,15 @@ export function UniversalEntityListClient<TData extends { id: string }>({
           queryClient.setQueryData(queryKey, data);
         });
       }
-      alert(`Помилка видалення: ${error.message}`);
+      alert(`${t('common.deleteError')}: ${error.message}`);
     },
     
-    // Invalidate on success
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['list', projectId, serviceType],
+    // Обновляем список после успешного удаления (safe-refetch)
+    onSuccess: async () => {
+      await updateListCache({
+        queryClient,
+        projectId,
+        serviceType,
       });
     },
   });
@@ -224,7 +232,8 @@ export function UniversalEntityListClient<TData extends { id: string }>({
     listSpec.actions || [],
     handleNavigate,
     handleDeleteRequest,
-    readOnly
+    readOnly,
+    t
   );
 
   // ========================================
@@ -270,7 +279,7 @@ export function UniversalEntityListClient<TData extends { id: string }>({
               onClick={handleDeleteConfirm}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? 'Видалення...' : deleteDialogConfig.confirmText}
+              {deleteMutation.isPending ? t('common.deleting') : deleteDialogConfig.confirmText}
             </Button>
           </DialogFooter>
         </DialogContent>
